@@ -78,16 +78,6 @@ int num_espacios;
 int yylex();
 int yyerror(const char *s);
 
-
-/*
-Verifica si el identificador que se pasa como
-parametro ya esta en la tabla de simbols.
-Si ya existe, manda error e incrementa el número de errores
-si no existe entonces lo inserta en la tabla de simbolos.
-Se usa en las reglas de declaraciones
-entero a; <-  tendría que insertarla en la tabla de simbolos
-entero a; <-- tendría que marcar que ya está
-*/
 void instalar(char *nombre_simbolo, char *tipo_dato){
 	simbolo *s;
 	s = obtener_simbolo(nombre_simbolo);
@@ -99,16 +89,6 @@ void instalar(char *nombre_simbolo, char *tipo_dato){
 	}
 }
 
-/*
-Si la variable no está declarada anteriormente
-entonces no se puede usar y manda un mensaje
-Se utiliza en cualquier expresion o funcion
-que utilice una variable
-leer(edad); <- Si no existe en la tabla manda error
-								porque se debe declarar antes
-						<- Si ya existe no hace nada porque ya
-								está declarada
-*/
 void verifica_contexto(char *nombre_simbolo){
 	if(obtener_simbolo(nombre_simbolo) == 0){
 		printf("%s es un identificador no declarado \n",nombre_simbolo);
@@ -116,10 +96,6 @@ void verifica_contexto(char *nombre_simbolo){
 	}
 }
 
-
-/*
-Verifica si dos simbolos tienen el mismo tipo
-*/
 void verifica_tipos(char *nombre_simbolo1, char *nombre_simbolo2){
 	simbolo *s1, *s2;
 	s1 = obtener_simbolo(nombre_simbolo1);
@@ -172,7 +148,7 @@ void imprime_instruccion_leer(char *nombre_simbolo){
 
 
 
-#line 176 "gramatica.tab.c" /* yacc.c:339  */
+#line 152 "gramatica.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -233,13 +209,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 111 "gramatica.y" /* yacc.c:355  */
+#line 87 "gramatica.y" /* yacc.c:355  */
 
 	char *cadena;
 	double flotante;
 	int entero;
 
-#line 243 "gramatica.tab.c" /* yacc.c:355  */
+#line 219 "gramatica.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -256,7 +232,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 260 "gramatica.tab.c" /* yacc.c:358  */
+#line 236 "gramatica.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -555,9 +531,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   135,   135,   135,   143,   144,   147,   148,   154,   163,
-     164,   167,   168,   169,   170,   171,   171,   174,   180,   181,
-     182,   183,   184,   185,   189,   190,   193,   194,   195,   196
+       0,   111,   111,   111,   119,   120,   123,   124,   130,   139,
+     140,   143,   144,   145,   146,   147,   147,   150,   156,   157,
+     158,   159,   160,   161,   165,   166,   169,   170,   171,   172
 };
 #endif
 
@@ -1370,77 +1346,77 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 135 "gramatica.y" /* yacc.c:1646  */
+#line 111 "gramatica.y" /* yacc.c:1646  */
     { num_espacios = 0; printf("int main(){");  num_espacios += 2;  }
-#line 1376 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1352 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 138 "gramatica.y" /* yacc.c:1646  */
+#line 114 "gramatica.y" /* yacc.c:1646  */
     { num_espacios -= 2; printf("\n}\n"); }
-#line 1382 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1358 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 148 "gramatica.y" /* yacc.c:1646  */
+#line 124 "gramatica.y" /* yacc.c:1646  */
     {
 																	instalar((yyvsp[0].cadena),"entero");
 																	asignar_inicializado((yyvsp[0].cadena),0);
 																	imprime_indentacion();
 																	printf("int %s;",(yyvsp[0].cadena));
 																}
-#line 1393 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1369 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 154 "gramatica.y" /* yacc.c:1646  */
+#line 130 "gramatica.y" /* yacc.c:1646  */
     {
 																	instalar((yyvsp[0].cadena),"flotante");
 																	asignar_inicializado((yyvsp[0].cadena),0);
 																	imprime_indentacion();
 																	printf("float %s;",(yyvsp[0].cadena));
 																}
-#line 1404 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1380 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 167 "gramatica.y" /* yacc.c:1646  */
+#line 143 "gramatica.y" /* yacc.c:1646  */
     { verifica_contexto((yyvsp[-1].cadena));  verifica_inicializacion((yyvsp[-1].cadena)); imprime_indentacion(); imprime_instruccion_leer((yyvsp[-1].cadena));}
-#line 1410 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1386 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 168 "gramatica.y" /* yacc.c:1646  */
+#line 144 "gramatica.y" /* yacc.c:1646  */
     { asignar_inicializado((yyvsp[-2].cadena),1); }
-#line 1416 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1392 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 169 "gramatica.y" /* yacc.c:1646  */
+#line 145 "gramatica.y" /* yacc.c:1646  */
     { verifica_tipos((yyvsp[-2].cadena),(yyvsp[0].cadena)); asignar_inicializado((yyvsp[-2].cadena),1); }
-#line 1422 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1398 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 171 "gramatica.y" /* yacc.c:1646  */
+#line 147 "gramatica.y" /* yacc.c:1646  */
     { imprime_indentacion(); printf("while(){"); num_espacios += 2;  }
-#line 1428 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1404 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 173 "gramatica.y" /* yacc.c:1646  */
+#line 149 "gramatica.y" /* yacc.c:1646  */
     { num_espacios -= 2; imprime_indentacion(); printf("}");   }
-#line 1434 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1410 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 183 "gramatica.y" /* yacc.c:1646  */
+#line 159 "gramatica.y" /* yacc.c:1646  */
     { verifica_contexto((yyvsp[0].cadena));  }
-#line 1440 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1416 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1444 "gramatica.tab.c" /* yacc.c:1646  */
+#line 1420 "gramatica.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1668,7 +1644,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 199 "gramatica.y" /* yacc.c:1906  */
+#line 175 "gramatica.y" /* yacc.c:1906  */
 
 
 #include "lex.yy.c"

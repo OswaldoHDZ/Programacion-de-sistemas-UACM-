@@ -1,4 +1,4 @@
-# ProyectoFinalProgSistemas
+# Proyecto Final Programación de Sistemas
 
 Actividades para análisis semántico
 
