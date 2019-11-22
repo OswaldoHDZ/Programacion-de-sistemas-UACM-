@@ -8,8 +8,7 @@
 
 
 DIGITO [0-9]
-
-
+LETRA [a-zA-Z]
 
 
 %%
@@ -20,23 +19,16 @@ DIGITO [0-9]
 "<-"                        { return ASIGNACION;  }
 "||"                        { return OR; }
 "mientras"                  { return MIENTRAS; }
-"leer"                      { return LEER; }
+"leer"                      { return LEER;  }
 "imprimir"                  { return IMPRIMIR; }
-"{"                         { return ABRIR_BLOQUE; }
-"}"                         { return CERRAR_BLOQUE; }
-"entero"                    { return ENTERO; }
-"caracter"                  { return CARACTER; }
+"{"                         { return ABRIR_BLOQUE;            }
+"}"                         { return CERRAR_BLOQUE;         }
+"entero"                    { return ENTERO;                        }
 "flotante"                  { return FLOTANTE; }
-"principal"                 { return PRINCIPAL; }
-"'"                         { return COMILLA_SIMPLE;}
-"haz"                       { return HAZ; }
-"si"                        { return SI; }
-"entonces"                  { return ENTONCES;}
-"otro"                      { return OTRO; }
+"principal"                 { return PRINCIPAL;                     }
 "\""[a-zA-Z0-9_,\- ]*"\""   { return CADENA; }
-"0"|[1-9][0-9]*             { yylval.entero   = atoi(yytext);   return NUMERO; }
-[a-zA-Z]                    { yylval.caracter =  yytext[0];        return LETRA; }
-[1-9].[0-9]|[1-9].[0-9]E[0-9] {yylval.flotante = strtod(yytext,NULL); return NUMFLOTANTE;}
+"0"|[1-9][0-9]*             { yylval.entero = atoi(yytext);   return NUMERO; }
+[0-9]*[\.][0-9]*             { yylval.flotante = atof(yytext); return NUMFLOTANTE; }
 [a-z][a-zA-Z0-9_]*          { yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR;      }
 [ \t\r\n]+     		        { /* Ignora los espacios en blanco */ }
 . 					        {  return(yytext[0]);  }
