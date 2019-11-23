@@ -111,6 +111,7 @@ void imprime_instruccion_leer(char *nombre_simbolo){
 %union{
 	char *cadena;
 	double flotante;
+	char caracter;
 	int entero;
 }
 
@@ -119,12 +120,14 @@ void imprime_instruccion_leer(char *nombre_simbolo){
 %token ENTERO FLOTANTE
 %token <flotante> NUMFLOTANTE
 %token CADENA
+%token CARACTER
 %token <cadena> IDENTIFICADOR
 %token <entero> NUMERO
-%token ABRIR_BLOQUE CERRAR_BLOQUE
+%token <caracter> LETRA
+%token ABRIR_BLOQUE CERRAR_BLOQUE COMILLA_SIMPLE
 %token PRINCIPAL
-%token LEER IMPRIMIR MIENTRAS PARA
-%token OR ASIGNACION DOBLE_MAS DOBLE_MENOS MAS
+%token LEER IMPRIMIR 	MIENTRAS  PARA 		  HAZ SI ENTONCES OTRO
+%token OR 	ASIGNACION  DOBLE_MAS DOBLE_MENOS MAS
 
 %left '<' OR MAS
 %right DOBLE_MAS  DOBLE_MENOS
@@ -145,20 +148,22 @@ declaraciones : /*declaraciones*/
 		;
 
 declaracion : /*empty*/
-		|  ENTERO IDENTIFICADOR 		{
-																	instalar($2,"entero");
-																	asignar_inicializado($2,0);
-																	imprime_indentacion();
-																	printf("int %s;",$2);
-																}
-		|  FLOTANTE IDENTIFICADOR 	{
-																	instalar($2,"flotante");
-																	asignar_inicializado($2,0);
-																	imprime_indentacion();
-																	printf("float %s;",$2);
-																}
+		|	ENTERO IDENTIFICADOR 															{ instalar($2,"entero");    asignar_inicializado($2,0);  imprime_indentacion(); printf("int %s;",$2);   }
+		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO										{ instalar($2,"entero");    asignar_inicializado($2,$4); imprime_indentacion(); printf("int %s = %d;",$2,$4);   }
+		|	ENTERO IDENTIFICADOR ',' declaracionMultiple									{ instalar($2,"entero");    asignar_inicializado($2,0);   printf("%s;",$2);   }
+		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO		  ',' declaracionMultiple		{ instalar($2,"entero");    asignar_inicializado($2,$4);  printf("%s = %d;",$2,$4);   }
+
+		|	CARACTER IDENTIFICADOR 															{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s;",$2);   }
+		| 	CARACTER IDENTIFICADOR     ASIGNACION LETRA										{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s = %d;",$2,$4);   }
+
 		;
 
+declaracionMultiple : /*empty*/
+		|	IDENTIFICADOR 											{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMERO							{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
+		|	IDENTIFICADOR ','	declaracionMultiple					{ instalar($1,"entero");    asignar_inicializado($1,0); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMERO	','	declaracionMultiple	{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
+		;
 
 instrucciones : /*empty*/
 		| instrucciones instruccion ';'
@@ -170,7 +175,7 @@ instruccion : LEER '(' IDENTIFICADOR ')'    { verifica_contexto($3);  verifica_i
 		| IMPRIMIR '(' CADENA ')'
 		| MIENTRAS '(' expresion ')' ABRIR_BLOQUE   { imprime_indentacion(); printf("while(){"); num_espacios += 2;  }
 			instrucciones
-		  CERRAR_BLOQUE  { num_espacios -= 2; imprime_indentacion(); printf("}");   }
+		    CERRAR_BLOQUE  { num_espacios -= 2; imprime_indentacion(); printf("}");   }
 		| PARA '(' IDENTIFICADOR ASIGNACION NUMERO ';' expresion ';' expresion_incremento  ')' ABRIR_BLOQUE
 			instrucciones
 			CERRAR_BLOQUE
@@ -178,7 +183,8 @@ instruccion : LEER '(' IDENTIFICADOR ')'    { verifica_contexto($3);  verifica_i
 
 
 expresion : expresion '<' expresion
-		|   expresion OR expresion
+		| expresion '>' expresion
+		| expresion OR expresion
 		| NUMERO
 		| IDENTIFICADOR            { verifica_contexto($1);  }
 		| expresion_incremento
@@ -193,9 +199,12 @@ expresion_incremento : IDENTIFICADOR DOBLE_MAS
 expresion_aritmetica : expresion_aritmetica MAS expresion_aritmetica
 										 | NUMERO
 										 | IDENTIFICADOR
+										 | NUMFLOTANTE
 										 | '(' expresion_aritmetica ')'
 										 ;
 
+asignacion_caracter : COMILLA_SIMPLE LETRA COMILLA_SIMPLE
+					;
 %%
 
 #include "lex.yy.c"

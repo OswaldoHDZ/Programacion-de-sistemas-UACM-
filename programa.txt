@@ -1,18 +1,11 @@
 principal(){
-
-	entero edad;
-	
-	entero numero_dias;
-	flotante temp;
-	entero numero_dias2;
-	entero edad;
-	numero_dias <- 0;
-	temp <- 0;
-	leer(numero_dias);
-	mientras( edad-- ){
-		leer(numero_dias);
-		mientras( edad < 20  ){
-			leer(temp);
-		};
-	};
+	entero uno;
+	entero dos <- 1;
+	entero tres,cuatro;
+	entero cinco,seis,siete;
+	entero ocho <-8, nueve;
+	entero dies ,once <-8;
+	entero dose ,catoce <-8,quince;
+	entero diesYseis <-8, diesYocho,diesYnueve;
+	caracter hola;
 }

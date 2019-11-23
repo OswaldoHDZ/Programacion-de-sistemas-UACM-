@@ -49,20 +49,27 @@ extern int yydebug;
     FLOTANTE = 259,
     NUMFLOTANTE = 260,
     CADENA = 261,
-    IDENTIFICADOR = 262,
-    NUMERO = 263,
-    ABRIR_BLOQUE = 264,
-    CERRAR_BLOQUE = 265,
-    PRINCIPAL = 266,
-    LEER = 267,
-    IMPRIMIR = 268,
-    MIENTRAS = 269,
-    PARA = 270,
-    OR = 271,
-    ASIGNACION = 272,
-    DOBLE_MAS = 273,
-    DOBLE_MENOS = 274,
-    MAS = 275
+    CARACTER = 262,
+    IDENTIFICADOR = 263,
+    NUMERO = 264,
+    LETRA = 265,
+    ABRIR_BLOQUE = 266,
+    CERRAR_BLOQUE = 267,
+    COMILLA_SIMPLE = 268,
+    PRINCIPAL = 269,
+    LEER = 270,
+    IMPRIMIR = 271,
+    MIENTRAS = 272,
+    PARA = 273,
+    HAZ = 274,
+    SI = 275,
+    ENTONCES = 276,
+    OTRO = 277,
+    OR = 278,
+    ASIGNACION = 279,
+    DOBLE_MAS = 280,
+    DOBLE_MENOS = 281,
+    MAS = 282
   };
 #endif
 
@@ -75,9 +82,10 @@ union YYSTYPE
 
 	char *cadena;
 	double flotante;
+	char caracter;
 	int entero;
 
-#line 81 "gramatica.tab.h" /* yacc.c:1909  */
+#line 89 "gramatica.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
