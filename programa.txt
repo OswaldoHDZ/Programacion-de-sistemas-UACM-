@@ -1,4 +1,7 @@
 principal(){
+
+	entero edad;
+	
 	entero numero_dias;
 	flotante temp;
 	entero numero_dias2;
