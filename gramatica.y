@@ -113,7 +113,6 @@ void imprime_instruccion_leer(char *nombre_simbolo){
 	double flotante;
 	char caracter;
 	int entero;
-	char caracter;
 }
 
 
@@ -149,7 +148,15 @@ declaraciones : /*declaraciones*/
 		;
 
 declaracion : /*empty*/
+		|	ENTERO IDENTIFICADOR 															{ instalar($2,"entero");    asignar_inicializado($2,0);  imprime_indentacion(); printf("int %s;",$2);   }
+		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO										{ instalar($2,"entero");    asignar_inicializado($2,$4); imprime_indentacion(); printf("int %s = %d;",$2,$4);   }
+		|	ENTERO IDENTIFICADOR ',' declaracionMultiple									{ instalar($2,"entero");    asignar_inicializado($2,0);   printf("%s;",$2);   }
+		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO		  ',' declaracionMultiple		{ instalar($2,"entero");    asignar_inicializado($2,$4);  printf("%s = %d;",$2,$4);   }
 
+		|	CARACTER IDENTIFICADOR 															{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s;",$2);   }
+		| 	CARACTER IDENTIFICADOR   ASIGNACION asignacion_caracter	      					{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s = ;",$2);   }
+
+		;
 
 declaracionMultiple : /*empty*/
 		|	IDENTIFICADOR 											{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("%s,",$1);   }
@@ -197,7 +204,7 @@ expresion_aritmetica : expresion_aritmetica MAS expresion_aritmetica
 										 ;
 
 asignacion_caracter : 	/*empty*/
-					|	COMILLA_SIMPLE LETRA COMILLA_SIMPLE {printf("%c",$2); }
+					|	COMILLA_SIMPLE LETRA COMILLA_SIMPLE {printf(" %c",$2); }
 					;
 %%
 
