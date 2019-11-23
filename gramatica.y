@@ -154,7 +154,7 @@ declaracion : /*empty*/
 		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO		  ',' declaracionMultiple		{ instalar($2,"entero");    asignar_inicializado($2,$4);  printf("%s = %d;",$2,$4);   }
 
 		|	CARACTER IDENTIFICADOR 															{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s;",$2);   }
-		| 	CARACTER IDENTIFICADOR     ASIGNACION LETRA										{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s = %d;",$2,$4);   }
+		| 	CARACTER IDENTIFICADOR   ASIGNACION asignacion_caracter	      					{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s = ;",$2);   }
 
 		;
 
@@ -203,7 +203,8 @@ expresion_aritmetica : expresion_aritmetica MAS expresion_aritmetica
 										 | '(' expresion_aritmetica ')'
 										 ;
 
-asignacion_caracter : COMILLA_SIMPLE LETRA COMILLA_SIMPLE
+asignacion_caracter : 	/*empty*/
+					|	COMILLA_SIMPLE LETRA COMILLA_SIMPLE {printf(" %c",$2); }
 					;
 %%
 

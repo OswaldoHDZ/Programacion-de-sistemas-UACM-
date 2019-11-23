@@ -8,4 +8,5 @@ principal(){
 	entero dose ,catoce <-8,quince;
 	entero diesYseis <-8, diesYocho,diesYnueve;
 	caracter hola;
+	caracter test <- 'h';
 }
