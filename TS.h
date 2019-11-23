@@ -4,17 +4,28 @@
 
 struct simbolo{
 	char *nombre; // Nombre del identificador
+	char *tipo_dato;   // tipo de dato: caracter flotante entero
+	int inicializado;
 	struct simbolo *siguiente_nodo;
 };
 
 typedef struct simbolo simbolo;
 simbolo *tabla_simbolos = (simbolo *)0;
 
-simbolo *inserta_simbolo(char *nombre_simbolo){
+simbolo *inserta_simbolo(char *nombre_simbolo, char *tipo_dato){
 	simbolo *ptr;
+
 	ptr = (simbolo *)malloc(sizeof(simbolo));
+
+	// Insertando nombre|
 	ptr -> nombre = (char *)malloc(strlen(nombre_simbolo)+1);
 	strcpy(ptr->nombre, nombre_simbolo);
+
+	// Insertando tipo de tipo_dato
+	ptr -> tipo_dato = (char *)malloc(strlen(tipo_dato)+1);
+	strcpy(ptr->tipo_dato, tipo_dato);
+
+	// Actualizando referencia o apuntadores
 	ptr -> siguiente_nodo = (struct simbolo *)tabla_simbolos;
 	tabla_simbolos = ptr;
 	return ptr;
@@ -27,6 +38,35 @@ simbolo *obtener_simbolo(char *nombre_simbolo){
 			return ptr;
 	return 0;
 }
+
+
+
+void set_inicializado(char *nombre_simbolo, int valor){
+	simbolo *s = tabla_simbolos;
+	while( strcmp(s->nombre, nombre_simbolo) != 0){  /*ptr != (simbolo *)0*/
+		s = s -> siguiente_nodo;
+	}
+	s->inicializado = valor;
+}
+
+
+int get_inicializado(char *nombre_simbolo){
+	simbolo *s = tabla_simbolos;
+	while( strcmp(s->nombre, nombre_simbolo) != 0){  /*ptr != (simbolo *)0*/
+		s = s -> siguiente_nodo;
+	}
+	return s->inicializado;
+}
+
+
+
+
+
+
+
+
+
+
 
 void imprime_tabla(simbolo *primer_simbolo){
 	simbolo *simbolo_actual = primer_simbolo;

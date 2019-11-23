@@ -13,6 +13,16 @@ int num_espacios;
 int yylex();
 int yyerror(const char *s);
 
+
+/*
+Verifica si el identificador que se pasa como
+parametro ya esta en la tabla de simbols.
+Si ya existe, manda error e incrementa el número de errores
+si no existe entonces lo inserta en la tabla de simbolos.
+Se usa en las reglas de declaraciones
+entero a; <-  tendría que insertarla en la tabla de simbolos
+entero a; <-- tendría que marcar que ya está
+*/
 void instalar(char *nombre_simbolo, char *tipo_dato){
 	simbolo *s;
 	s = obtener_simbolo(nombre_simbolo);
@@ -24,6 +34,16 @@ void instalar(char *nombre_simbolo, char *tipo_dato){
 	}
 }
 
+/*
+Si la variable no está declarada anteriormente
+entonces no se puede usar y manda un mensaje
+Se utiliza en cualquier expresion o funcion
+que utilice una variable
+leer(edad); <- Si no existe en la tabla manda error
+								porque se debe declarar antes
+						<- Si ya existe no hace nada porque ya
+								está declarada
+*/
 void verifica_contexto(char *nombre_simbolo){
 	if(obtener_simbolo(nombre_simbolo) == 0){
 		printf("%s es un identificador no declarado \n",nombre_simbolo);
@@ -31,6 +51,10 @@ void verifica_contexto(char *nombre_simbolo){
 	}
 }
 
+
+/*
+Verifica si dos simbolos tienen el mismo tipo
+*/
 void verifica_tipos(char *nombre_simbolo1, char *nombre_simbolo2){
 	simbolo *s1, *s2;
 	s1 = obtener_simbolo(nombre_simbolo1);
