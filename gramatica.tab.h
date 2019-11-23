@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.3.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 #ifndef YY_YY_GRAMATICA_TAB_H_INCLUDED
 # define YY_YY_GRAMATICA_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -51,18 +55,19 @@ extern int yydebug;
     CADENA = 261,
     IDENTIFICADOR = 262,
     NUMERO = 263,
-    ABRIR_BLOQUE = 264,
-    CERRAR_BLOQUE = 265,
-    PRINCIPAL = 266,
-    LEER = 267,
-    IMPRIMIR = 268,
-    MIENTRAS = 269,
-    PARA = 270,
-    OR = 271,
-    ASIGNACION = 272,
-    DOBLE_MAS = 273,
-    DOBLE_MENOS = 274,
-    MAS = 275
+    CARACTER = 264,
+    ABRIR_BLOQUE = 265,
+    CERRAR_BLOQUE = 266,
+    PRINCIPAL = 267,
+    LEER = 268,
+    IMPRIMIR = 269,
+    MIENTRAS = 270,
+    PARA = 271,
+    OR = 272,
+    ASIGNACION = 273,
+    DOBLE_MAS = 274,
+    DOBLE_MENOS = 275,
+    MAS = 276
   };
 #endif
 
@@ -71,13 +76,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 111 "gramatica.y" /* yacc.c:1909  */
+#line 111 "gramatica.y" /* yacc.c:1921  */
 
 	char *cadena;
 	double flotante;
 	int entero;
+	char caracter;
 
-#line 81 "gramatica.tab.h" /* yacc.c:1909  */
+#line 87 "gramatica.tab.h" /* yacc.c:1921  */
 };
 
 typedef union YYSTYPE YYSTYPE;

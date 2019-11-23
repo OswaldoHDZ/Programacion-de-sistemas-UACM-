@@ -1,7 +1,9 @@
 principal(){
 
 	entero edad;
-	
+	flotante altura;
+	caracter simbolo;
+
 	entero numero_dias;
 	flotante temp;
 	entero numero_dias2;

@@ -112,6 +112,7 @@ void imprime_instruccion_leer(char *nombre_simbolo){
 	char *cadena;
 	double flotante;
 	int entero;
+	char caracter;
 }
 
 
@@ -121,6 +122,7 @@ void imprime_instruccion_leer(char *nombre_simbolo){
 %token CADENA
 %token <cadena> IDENTIFICADOR
 %token <entero> NUMERO
+%token <caracter> CARACTER
 %token ABRIR_BLOQUE CERRAR_BLOQUE
 %token PRINCIPAL
 %token LEER IMPRIMIR MIENTRAS PARA
@@ -157,6 +159,12 @@ declaracion : /*empty*/
 																	imprime_indentacion();
 																	printf("float %s;",$2);
 																}
+		|  CARACTER IDENTIFICADOR 	{
+																	instalar($2,"caracter");
+																	asignar_inicializado($2,0);
+																	imprime_indentacion();
+																	printf("char %s;",$2);
+																}														
 		;
 
 
