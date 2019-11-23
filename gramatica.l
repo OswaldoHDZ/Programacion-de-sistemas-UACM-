@@ -25,6 +25,7 @@ DIGITO [0-9]
 "entero"                    { return ENTERO;                        }
 "caracter"                  { return CARACTER; }
 "flotante"                  { return FLOTANTE; }
+"caracter"                  { return CARACTER; }
 "principal"                 { return PRINCIPAL;                     }
 "'"                         { return COMILLA_SIMPLE;}
 "\""[a-zA-Z0-9_,\- ]*"\""   { return CADENA; }
