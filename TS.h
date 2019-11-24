@@ -3,9 +3,10 @@
 #include <string.h>
 
 struct simbolo{
-	char *nombre; // Nombre del identificador
-	char *tipo_dato;   // tipo de dato: caracter flotante entero
-	int inicializado;
+	char 			*nombre; // Nombre del identificador
+	char 			*tipo_dato;   // tipo de dato: caracter flotante entero
+	int 			inicializado;
+	char 			inicializadoValorCaracter;
 	struct simbolo *siguiente_nodo;
 };
 
@@ -47,6 +48,14 @@ void set_inicializado(char *nombre_simbolo, int valor){
 		s = s -> siguiente_nodo;
 	}
 	s->inicializado = valor;
+}
+
+void set_inicializadoCaracter(char *nombre_simbolo, char valor){
+	simbolo *s = tabla_simbolos;
+	while( strcmp(s->nombre, nombre_simbolo) != 0){  /*ptr != (simbolo *)0*/
+		s = s -> siguiente_nodo;
+	}
+	s->inicializadoValorCaracter = valor;
 }
 
 

@@ -71,6 +71,9 @@ void asignar_inicializado(char *nombre_simbolo, int valor){
 		set_inicializado(nombre_simbolo, valor);
 }
 
+void asignar_inicializadoCaracter (char *nombre_simbolo, char valor){
+	set_inicializadoCaracter(nombre_simbolo,valor);
+}
 
 void verifica_inicializacion(char *nombre_simbolo){
 	simbolo *s;
@@ -148,21 +151,29 @@ declaraciones : /*declaraciones*/
 		;
 
 declaracion : /*empty*/
-		|	ENTERO IDENTIFICADOR 															{ instalar($2,"entero");    asignar_inicializado($2,0);  imprime_indentacion(); printf("int %s;",$2);   }
-		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO										{ instalar($2,"entero");    asignar_inicializado($2,$4); imprime_indentacion(); printf("int %s = %d;",$2,$4);   }
+		|	ENTERO IDENTIFICADOR 															{ instalar($2,"entero");    asignar_inicializado($2,0);   imprime_indentacion(); printf("int %s;",$2);   }
+		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO										{ instalar($2,"entero");    asignar_inicializado($2,$4);  imprime_indentacion(); printf("int %s = %d;",$2,$4);   }
 		|	ENTERO IDENTIFICADOR ',' declaracionMultiple									{ instalar($2,"entero");    asignar_inicializado($2,0);   printf("%s;",$2);   }
 		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO		  ',' declaracionMultiple		{ instalar($2,"entero");    asignar_inicializado($2,$4);  printf("%s = %d;",$2,$4);   }
 
-		|	CARACTER IDENTIFICADOR 															{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s;",$2);   }
-		| 	CARACTER IDENTIFICADOR   ASIGNACION asignacion_caracter	      					{ instalar($2,"caracter");    imprime_indentacion(); printf("char %s = ;",$2);   }
-
+		|	CARACTER IDENTIFICADOR 															{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,' ');  imprime_indentacion(); printf("char %s ;",$2);      }
+		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE			{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,$5);   imprime_indentacion(); printf("char %s = ;",$2);   }
+		|	CARACTER IDENTIFICADOR ',' declaracionMultipleCaracter							{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,' ');  printf("%s;",$2);   }
+		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,$5);   imprime_indentacion(); printf("char %s = ;",$2);   }
 		;
 
 declaracionMultiple : /*empty*/
 		|	IDENTIFICADOR 											{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION NUMERO							{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
+		|	IDENTIFICADOR ASIGNACION NUMERO							{ instalar($1,"entero");    asignar_inicializado($1,$3); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
 		|	IDENTIFICADOR ','	declaracionMultiple					{ instalar($1,"entero");    asignar_inicializado($1,0); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION NUMERO	','	declaracionMultiple	{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
+		|	IDENTIFICADOR ASIGNACION NUMERO	','	declaracionMultiple	{ instalar($1,"entero");    asignar_inicializado($1,$3); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
+		;
+
+declaracionMultipleCaracter : /*empty*/
+		|	IDENTIFICADOR 																					{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,' '); imprime_indentacion(); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE									{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %d,",$1,$4);   }
+		|	IDENTIFICADOR ','	declaracionMultiple															{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,' '); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultiple			{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %d,",$1,$4);   }
 		;
 
 instrucciones : /*empty*/
@@ -203,9 +214,6 @@ expresion_aritmetica : expresion_aritmetica MAS expresion_aritmetica
 										 | '(' expresion_aritmetica ')'
 										 ;
 
-asignacion_caracter : 	/*empty*/
-					|	COMILLA_SIMPLE LETRA COMILLA_SIMPLE {printf(" %c",$2); }
-					;
 %%
 
 #include "lex.yy.c"

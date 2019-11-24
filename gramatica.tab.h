@@ -78,7 +78,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 111 "gramatica.y" /* yacc.c:1909  */
+#line 114 "gramatica.y" /* yacc.c:1909  */
 
 	char *cadena;
 	double flotante;
