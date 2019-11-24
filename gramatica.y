@@ -75,10 +75,14 @@ void asignar_inicializadoCaracter (char *nombre_simbolo, char valor){
 	set_inicializadoCaracter(nombre_simbolo,valor);
 }
 
+void asignar_inicializadoFlotante (char *nombre_simbolo, float valor){
+	set_inicializadoFlotante(nombre_simbolo,valor);
+}
+
 void verifica_inicializacion(char *nombre_simbolo){
 	simbolo *s;
 	s = obtener_simbolo(nombre_simbolo);
-	if( s->inicializado == 0 ){
+	if( s->inicializado == 0 || s->inicializadoValorCaracter == ' ' || s->inicializadoValorFlotante == 0.0){
 		printf("\nLa variable %s no esta inicializada\n",nombre_simbolo);
 		errores++;
 	}
@@ -160,6 +164,11 @@ declaracion : /*empty*/
 		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE			{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,$5);   imprime_indentacion(); printf("char %s = ;",$2);   }
 		|	CARACTER IDENTIFICADOR ',' declaracionMultipleCaracter							{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,' ');  printf("%s;",$2);   }
 		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,$5);   imprime_indentacion(); printf("char %s = ;",$2);   }
+
+		|	FLOTANTE IDENTIFICADOR 																	{ instalar($2,"flotante");    asignar_inicializadoFlotante($2,0.0); imprime_indentacion(); printf("float %s;",$2);   }
+		| 	FLOTANTE IDENTIFICADOR     ASIGNACION NUMFLOTANTE										{ instalar($2,"flotante");    asignar_inicializadoFlotante($2,$4);  imprime_indentacion(); printf("float %s = %f;",$2,$4);   }
+		|	FLOTANTE IDENTIFICADOR ',' declaracionMultipleFotante									{ instalar($2,"flotante");    asignar_inicializadoFlotante($2,0.0); 					   printf("%s;",$2);   }
+		| 	FLOTANTE IDENTIFICADOR     ASIGNACION NUMFLOTANTE  ',' declaracionMultipleFotante		{ instalar($2,"flotante");    asignar_inicializadoFlotante($2,$4);  					   printf("%s = %f;",$2,$4);   }								
 		;
 
 declaracionMultiple : /*empty*/
@@ -172,9 +181,17 @@ declaracionMultiple : /*empty*/
 declaracionMultipleCaracter : /*empty*/
 		|	IDENTIFICADOR 																					{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,' '); imprime_indentacion(); printf("%s,",$1);   }
 		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE									{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %d,",$1,$4);   }
-		|	IDENTIFICADOR ','	declaracionMultiple															{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,' '); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultiple			{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %d,",$1,$4);   }
+		|	IDENTIFICADOR ','	declaracionMultipleCaracter													{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,' '); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %d,",$1,$4);   }
 		;
+
+declaracionMultipleFotante : /*empty*/
+		|	IDENTIFICADOR 													{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 	imprime_indentacion(); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE							{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3); 	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
+		|	IDENTIFICADOR ','	declaracionMultipleFotante					{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 						   printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE	','	declaracionMultipleFotante	{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3);	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
+		;
+
 
 instrucciones : /*empty*/
 		| instrucciones instruccion ';'
