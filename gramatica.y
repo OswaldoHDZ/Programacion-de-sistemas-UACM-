@@ -186,10 +186,10 @@ declaracionMultipleCaracter : /*empty*/
 		;
 
 declaracionMultipleFotante : /*empty*/
-		|	IDENTIFICADOR 													{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 	imprime_indentacion(); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE							{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3); 	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
-		|	IDENTIFICADOR ','	declaracionMultipleFotante					{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 						   printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE	','	declaracionMultipleFotante	{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3);	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
+		|	IDENTIFICADOR 													{ instalar($1,"flotante");    asignar_inicializadoFlotante($1,0.0); 	imprime_indentacion(); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE							{ instalar($1,"flotante");    asignar_inicializado($1,$3); imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
+		|	IDENTIFICADOR ','	declaracionMultipleFotante					{ instalar($1,"flotante");    asignar_inicializadoFlotante($1,0.0); 						   printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE	','	declaracionMultipleFotante	{ instalar($1,"flotante");    asignar_inicializadoFlotante($1,$3);	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
 		;
 
 

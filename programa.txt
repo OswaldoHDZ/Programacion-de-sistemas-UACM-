@@ -1,14 +1,14 @@
 principal(){
-	entero uno;
-	entero dos <- 1;
-	entero tres,cuatro;
-	entero cinco,seis,siete;
-	entero ocho <-8, nueve;
-	entero dies ,once <-8;
-	entero dose ,catoce <-8,quince;
-	entero diesYseis <-8, diesYocho,diesYnueve;
+    
+	entero W;
 
-
+	flotante dos <- 1.1;
+	flotante tres,cuatro;
+	flotante cinco,seis,siete;
+	flotante ocho <-8.1, nueve;
+	flotante dies ,once <-8.1;
+	flotante dose ,catoce <-8.1,quince;
+	flotante diesYseis <-8.1, diesYocho,diesYnueve;
 
 	caracter hola;
 	caracter test <- 'h';
@@ -20,5 +20,5 @@ principal(){
 	caracter caralK <- 'F' , caracH , caraB;
 
 
-	
+
 }
