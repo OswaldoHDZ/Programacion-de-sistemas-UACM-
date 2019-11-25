@@ -1556,25 +1556,25 @@ yyreduce:
 
   case 30:
 #line 189 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[0].cadena),"flotante");    asignar_inicializadoFlotante((yyvsp[0].cadena),0.0); 	imprime_indentacion(); printf("%s,",(yyvsp[0].cadena));   }
+    { instalar((yyvsp[0].cadena),"entero");    asignar_inicializadoFlotante((yyvsp[0].cadena),0.0); 	imprime_indentacion(); printf("%s,",(yyvsp[0].cadena));   }
 #line 1561 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
 #line 190 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[-2].cadena),"flotante");    asignar_inicializado((yyvsp[-2].cadena),(yyvsp[0].flotante)); imprime_indentacion(); printf("int %s = %f,",(yyvsp[-2].cadena),(yyvsp[0].flotante));   }
+    { instalar((yyvsp[-2].cadena),"entero");    asignar_inicializadoFlotante((yyvsp[-2].cadena),(yyvsp[0].flotante)); 	imprime_indentacion(); printf("int %s = %f,",(yyvsp[-2].cadena),(yyvsp[0].flotante));   }
 #line 1567 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 191 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[-2].cadena),"flotante");    asignar_inicializadoFlotante((yyvsp[-2].cadena),0.0); 						   printf("%s,",(yyvsp[-2].cadena));   }
+    { instalar((yyvsp[-2].cadena),"entero");    asignar_inicializadoFlotante((yyvsp[-2].cadena),0.0); 						   printf("%s,",(yyvsp[-2].cadena));   }
 #line 1573 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 192 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[-4].cadena),"flotante");    asignar_inicializadoFlotante((yyvsp[-4].cadena),(yyvsp[-2].flotante));	imprime_indentacion(); printf("int %s = %f,",(yyvsp[-4].cadena),(yyvsp[-2].flotante));   }
+    { instalar((yyvsp[-4].cadena),"entero");    asignar_inicializadoFlotante((yyvsp[-4].cadena),(yyvsp[-2].flotante));	imprime_indentacion(); printf("int %s = %f,",(yyvsp[-4].cadena),(yyvsp[-2].flotante));   }
 #line 1579 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
