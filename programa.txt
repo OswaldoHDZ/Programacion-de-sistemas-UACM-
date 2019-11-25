@@ -10,14 +10,6 @@ principal(){
 
 
 
-	caracter hola;
-	caracter test <- 'h';
-	caracter como,estas;
-	caracter bien,yo,muyTambien;
-	caracter caraL <-'w',oswaldo;
-	caracter caraQ , caralW <- 'M';
-	caracter caraE , caraR  <- 'S' , caraP;
-	caracter caralK <- 'F' , caracH , caraB;
 
 
 	
