@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 25
-#define YY_END_OF_BUFFER 26
+#define YY_NUM_RULES 24
+#define YY_END_OF_BUFFER 25
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,15 +362,15 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[87] =
     {   0,
-        0,    0,   26,   24,   23,   23,   24,   17,    1,   24,
-       21,   19,   19,   24,   20,   20,   20,   20,   20,   20,
-       20,   20,   20,   10,   24,   11,   23,    0,   18,    3,
-        2,   21,   21,    0,   19,    5,   22,   22,   22,   22,
-       22,   22,   22,   22,   22,    6,   22,   22,   22,   22,
-       22,   22,   22,   22,   22,   22,   22,   22,    8,   22,
-        4,   22,   22,   22,   22,   22,   22,   22,   22,   12,
-       22,   22,   22,   22,   22,   22,   22,   22,   22,   13,
-       14,    9,    7,   22,   16,    0
+        0,    0,   25,   23,   22,   22,   23,   16,    1,   23,
+       20,   18,   18,   23,   19,   19,   19,   19,   19,   19,
+       19,   19,   19,   10,   23,   11,   22,    0,   17,    3,
+        2,   20,   20,    0,   18,    5,   21,   21,   21,   21,
+       21,   21,   21,   21,   21,    6,   21,   21,   21,   21,
+       21,   21,   21,   21,   21,   21,   21,   21,    8,   21,
+        4,   21,   21,   21,   21,   21,   21,   21,   21,   12,
+       21,   21,   21,   21,   21,   21,   21,   21,   21,   13,
+       14,    9,    7,   21,   15,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -850,60 +850,55 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 28 "gramatica.l"
-{ return CARACTER; }
+{ return PRINCIPAL;                     }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 29 "gramatica.l"
-{ return PRINCIPAL;                     }
+{ return COMILLA_SIMPLE;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 30 "gramatica.l"
-{ return COMILLA_SIMPLE;}
+{ return CADENA; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 31 "gramatica.l"
-{ return CADENA; }
+{ yylval.entero = atoi(yytext);   return NUMERO; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 32 "gramatica.l"
-{ yylval.entero = atoi(yytext);   return NUMERO; }
+{ yylval.caracter = yytext[0]; return LETRA; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 33 "gramatica.l"
-{ yylval.caracter =  yytext[0];        return LETRA; }
+{ yylval.flotante = atof(yytext); return NUMFLOTANTE; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 34 "gramatica.l"
-{ yylval.flotante = atof(yytext); return NUMFLOTANTE; }
+{ yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR; }
 	YY_BREAK
 case 22:
+/* rule 22 can match eol */
 YY_RULE_SETUP
 #line 35 "gramatica.l"
-{ yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR;      }
+{ /* Ignora los espacios en blanco */ }
 	YY_BREAK
 case 23:
-/* rule 23 can match eol */
 YY_RULE_SETUP
 #line 36 "gramatica.l"
-{ /* Ignora los espacios en blanco */ }
+{  return(yytext[0]);  }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 37 "gramatica.l"
-{  return(yytext[0]);  }
-	YY_BREAK
-case 25:
-YY_RULE_SETUP
-#line 39 "gramatica.l"
+#line 38 "gramatica.l"
 ECHO;
 	YY_BREAK
-#line 907 "lex.yy.c"
+#line 902 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1908,5 +1903,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 39 "gramatica.l"
+#line 38 "gramatica.l"
 
