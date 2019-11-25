@@ -1,5 +1,5 @@
 %{
-/* Reconocedor de tokens para una calculadora */
+/* Reconocedor de tokens para una calculadora test */
 #include "gramatica.tab.h"
 #include <math.h>
 #include <stdlib.h>
