@@ -134,7 +134,7 @@ void imprime_instruccion_leer(char *nombre_simbolo){
 %token ABRIR_BLOQUE CERRAR_BLOQUE COMILLA_SIMPLE
 %token PRINCIPAL
 %token LEER IMPRIMIR 	MIENTRAS  PARA 		  HAZ SI ENTONCES OTRO
-%token OR 	ASIGNACION  DOBLE_MAS DOBLE_MENOS MAS
+%token OR ASIGNACION  DOBLE_MAS DOBLE_MENOS MAS
 
 %left '<' OR MAS
 %right DOBLE_MAS  DOBLE_MENOS
@@ -181,14 +181,14 @@ declaracionMultiple : /*empty*/
 declaracionMultipleCaracter : /*empty*/
 		|	IDENTIFICADOR 																					{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,' '); imprime_indentacion(); printf("%s,",$1);   }
 		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE									{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %d,",$1,$4);   }
-		|	IDENTIFICADOR ','	declaracionMultipleCaracter													{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,' '); printf("%s,",$1);   }
+		|	IDENTIFICADOR ','	declaracionMultipleCaracter													{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,' '); printf("%s,", $1);   }
 		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %d,",$1,$4);   }
 		;
 
 declaracionMultipleFotante : /*empty*/
 		|	IDENTIFICADOR 													{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 	imprime_indentacion(); printf("%s,",$1);   }
 		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE							{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3); 	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
-		|	IDENTIFICADOR ','	declaracionMultipleFotante					{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 						   printf("%s,",$1);   }
+		|	IDENTIFICADOR ',' declaracionMultipleFotante					{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 						   printf("%s,",$1);   }
 		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE	','	declaracionMultipleFotante	{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3);	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
 		;
 

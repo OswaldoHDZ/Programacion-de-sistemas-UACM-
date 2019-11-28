@@ -2,7 +2,7 @@ principal(){
 	entero a;
 	caracter w;
 	entero uno;
-	flotante v;
+	flotante v <- 2.3;
 	entero dos <- 1;
 	entero tres,cuatro;
 	entero cinco,seis,siete;
@@ -10,4 +10,8 @@ principal(){
 	entero dies ,once <-8;
 	entero dose ,catoce <-8,quince;
 	entero diesYseis <-8, diesYocho,diesYnueve;
+	caracter z, x, y;
+
+	imprimir("abc");
+
 }
