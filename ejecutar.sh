@@ -1,5 +1,4 @@
 #!/bin/bash
-# compilar bison & flex
 clear
 bison -d gramatica.y 
 flex gramatica.l

@@ -363,9 +363,9 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[95] =
     {   0,
         0,    0,   28,   26,   25,   25,   26,   15,    5,   26,
-       21,   21,   26,   23,   22,   22,   22,   22,   22,   22,
-       22,   22,   22,   22,   22,   13,   26,   14,   25,    0,
-       20,    7,    6,    0,    0,   21,    1,   22,   22,   22,
+       21,   21,   26,   21,   21,   21,   21,   21,   21,   21,
+       21,   21,   21,   21,   21,   13,   26,   14,   25,    0,
+       20,    7,    6,    0,    0,   23,    1,   22,   22,   22,
        22,   22,   22,   22,   22,   22,   22,   22,    3,    9,
        24,   22,   22,   22,    2,   22,   22,   22,   22,   22,
        22,   22,   22,   22,   22,   11,   22,    4,    8,   22,
@@ -888,37 +888,37 @@ YY_RULE_SETUP
 case 21:
 YY_RULE_SETUP
 #line 35 "gramatica.l"
-{ yylval.entero = atoi(yytext);   return NUMERO; }
+{ yylval.caracter = (char*) strdup(yytext); return LETRA; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 36 "gramatica.l"
-{ yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR; }
+{ yylval.cadena = 	(char*) strdup(yytext); return IDENTIFICADOR; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 37 "gramatica.l"
-{ yylval.caracter = (char*) strdup(yytext); return LETRA; }
+{ yylval.entero = atoi(yytext);   		    return NUMERO; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 38 "gramatica.l"
-{ yylval.flotante = strtod(yytext, NULL); return NUMFLOTANTE; }
+{ yylval.flotante = strtod(yytext, NULL);   return NUMFLOTANTE; }
 	YY_BREAK
 case 25:
 /* rule 25 can match eol */
 YY_RULE_SETUP
-#line 39 "gramatica.l"
+#line 40 "gramatica.l"
 { /* Ignora los espacios en blanco */ }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 40 "gramatica.l"
+#line 41 "gramatica.l"
 {  return(yytext[0]);  }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 42 "gramatica.l"
+#line 43 "gramatica.l"
 ECHO;
 	YY_BREAK
 #line 925 "lex.yy.c"
@@ -1926,5 +1926,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 42 "gramatica.l"
+#line 43 "gramatica.l"
+
 

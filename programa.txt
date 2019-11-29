@@ -1,4 +1,3 @@
 principal(){
-
-	caracter v<-'W';
+	caracter hola <- 'a';
 }

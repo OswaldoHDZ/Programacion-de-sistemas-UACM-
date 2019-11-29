@@ -32,10 +32,11 @@ LETRA [a-zA-Z]
 "flotante"                  { return FLOTANTE; }
 "principal"                 { return PRINCIPAL; }
 "\""[a-zA-Z0-9_,\- ]*"\""   { return CADENA; }
-"0"|[1-9][0-9]*             { yylval.entero = atoi(yytext);   return NUMERO; }
-[a-z][a-zA-Z0-9_]*          { yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR; }
-[a-zA-Z]                    { yylval.caracter = (char*) strdup(yytext); return LETRA; }
-[0-9]+([.][0-9]+)           { yylval.flotante = strtod(yytext, NULL); return NUMFLOTANTE; }
+[a-zA-Z0-9]                 { yylval.caracter = (char*) strdup(yytext); return LETRA; }
+[a-z][a-zA-Z0-9_]*          { yylval.cadena = 	(char*) strdup(yytext); return IDENTIFICADOR; }
+"0"|[1-9][0-9]*             { yylval.entero = atoi(yytext);   		    return NUMERO; }
+[0-9]+([.][0-9]+)           { yylval.flotante = strtod(yytext, NULL);   return NUMFLOTANTE; }
+
 [ \t\r\n]+     		        { /* Ignora los espacios en blanco */ }
 . 					        {  return(yytext[0]);  }
 
