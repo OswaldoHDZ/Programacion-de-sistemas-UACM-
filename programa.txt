@@ -1,3 +1,19 @@
 principal(){
-	caracter hola <- 'a';
+	entero numero_dias, edad, aa;
+	entero a;
+	entero b;
+
+	entero c <- 2;
+	caracter w <- 'q';
+	entero numero_dias2;
+	caracter letra, letra2, letra3;
+	numero_dias <- 5;
+	numero_dias <- 7;
+	mientras( (     (7*7)   *   (5+7   )      /3)   -   (32+76)  ){
+		leer(numero_dias);
+		mientras( 3/4  ){
+			leer(numero_dias);
+			imprimir("hola mundo ");
+		};
+	};
 }

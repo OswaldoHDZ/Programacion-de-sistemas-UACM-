@@ -5,8 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "TS.h"
+#include "arbol.h"
 
 #define YYDEBUG 1
+
+
 int errores;
 int num_espacios;
 
@@ -27,7 +30,7 @@ void instalar(char *nombre_simbolo, char *tipo_dato){
 	simbolo *s;
 	s = obtener_simbolo(nombre_simbolo);
 	if( s == 0 )
-		s = inserta_simbolo(nombre_simbolo, tipo_dato);
+		s = inserta_simbolo(nombre_simbolo,tipo_dato);
 	else{
 		errores++;
 		printf("(Variable duplicada): %s ya está declarada \n",nombre_simbolo);
@@ -52,100 +55,80 @@ void verifica_contexto(char *nombre_simbolo){
 }
 
 
+
+
 /*
-Verifica si dos simbolos tienen el mismo tipo
+Esta funcion recibe dos nombres de simbolos, los busca en la tabla
+de símbolos y luego compara sus tipos de datos. Si son diferentes
+marca error e incrementa el número de errores. Si son iguales
+no hace nada.
 */
-void verifica_tipos(char *nombre_simbolo1, char *nombre_simbolo2){
+void compara_variables(char *nombre_simbolo1, char *nombre_simbolo2){
 	simbolo *s1, *s2;
 	s1 = obtener_simbolo(nombre_simbolo1);
 	s2 = obtener_simbolo(nombre_simbolo2);
-	printf("\nComparando %s y %s \n",s1->tipo_dato,s2->tipo_dato);
-	if( strcmp(s1->tipo_dato,s2->tipo_dato) != 0){
-		printf("Las dos variables deben tener el mismo tipo de dato ");
-		errores++;
+	if(  strcmp(s1->tipo_dato,s2->tipo_dato) != 0 ){
+	   printf("\nNo se puede asignar  %s a un %s\n",s2->tipo_dato,s1->tipo_dato);
+	   return;
 	}
 }
 
 
-void asignar_inicializado(char *nombre_simbolo, int valor){
-		set_inicializado(nombre_simbolo, valor);
-}
 
-void asignar_inicializadoCaracter (char *nombre_simbolo, char *valor){
-	set_inicializadoCaracter(nombre_simbolo,valor);
-}
 
-void asignar_inicializadoFlotante (char *nombre_simbolo, float valor){
-	set_inicializadoFlotante(nombre_simbolo,valor);
-}
-
-void verifica_inicializacion(char *nombre_simbolo){
-	simbolo *s;
-	s = obtener_simbolo(nombre_simbolo);
-	if( s->inicializado == 0 || s->inicializadoValorCaracter == " " || s->inicializadoValorFlotante == 0.0){
-		printf("\nLa variable %s no esta inicializada\n",nombre_simbolo);
-		errores++;
-	}
+void imprime_instruccion_leer(char *nombre_simbolo){
+		simbolo *s;
+		s = obtener_simbolo(nombre_simbolo);
+		printf("scanf(\"%%d\",&%s);\n",s->nombre);
 }
 
 
 void imprime_indentacion(){
-	int i = 0;
-	printf("\n");
-	for(i=0; i<num_espacios; i++)
+	int i=0;
+	for(i=0; i<=num_espacios; i++)
+	{
 		printf(" ");
+	};
 }
-
-
-void imprime_instruccion_leer(char *nombre_simbolo){
-	simbolo *s;
-	char *tipo_dato;
-	s = obtener_simbolo(nombre_simbolo);
-
-	if( strcmp(s->tipo_dato,"entero") == 0 )
-		printf("scanf(\"%%d\",&%s);",nombre_simbolo);
-	if( strcmp(s->tipo_dato,"flotante") == 0 )
-		printf("scanf(\"%%f\",&%s);",nombre_simbolo);
-	if( strcmp(s->tipo_dato,"caracter") == 0 )
-		printf("scanf(\"%%c\",&%s);",nombre_simbolo);
-}
-
-
 
 
 %}
 /* Valores semánticos de los tokens */
 %union{
-	char 	*cadena;
-	double 	flotante;
-	char 	*caracter;
-	int 	entero;
+	struct ast *arbol;
+	char *cadena;
+	char caracter;
+	int entero;
 }
 
 
+
+%define parse.lac full
+
 %start programa
-%token ENTERO FLOTANTE
-%token <flotante> NUMFLOTANTE
+%token ENTERO
 %token CADENA
+%token <caracter> DATO_CARACTER
 %token CARACTER
 %token <cadena> IDENTIFICADOR
 %token <entero> NUMERO
-%token <caracter> LETRA
-%token ABRIR_BLOQUE CERRAR_BLOQUE COMILLA_SIMPLE
+%token ABRIR_BLOQUE CERRAR_BLOQUE
 %token PRINCIPAL
-%token LEER IMPRIMIR 	MIENTRAS  PARA 		  HAZ SI ENTONCES OTRO
-%token OR 	ASIGNACION  DOBLE_MAS DOBLE_MENOS MAS
+%token LEER IMPRIMIR MIENTRAS PARA
+%token OR ASIGNACION DOBLE_MAS DOBLE_MENOS MAS MENOS POR ENTRE
 
-%left '<' OR MAS
+%type <arbol> exp_arit factor termino
+
+%left '<' OR MAS MENOS POR ENTRE
 %right DOBLE_MAS  DOBLE_MENOS
 
 
 %%
 
-programa : PRINCIPAL '(' ')' ABRIR_BLOQUE { num_espacios = 0; printf("int main(){");  num_espacios += 2;  }
-					  declaraciones
-					  instrucciones
-          CERRAR_BLOQUE   { num_espacios -= 2; printf("\n}\n"); }
+programa : PRINCIPAL '(' ')' ABRIR_BLOQUE							{ num_espacios = 0; printf("int main(){\n");  num_espacios += 2;	  }
+		  declaraciones
+		  instrucciones
+		  CERRAR_BLOQUE																{ printf("}\n\n");  num_espacios -= 2;		}
           ;
 
 
@@ -154,42 +137,19 @@ declaraciones : /*declaraciones*/
 		| declaraciones declaracion ';'
 		;
 
-declaracion : /*empty*/
-		|	ENTERO IDENTIFICADOR 															{ instalar($2,"entero");    asignar_inicializado($2,0);   imprime_indentacion(); printf("int %s;",$2);   }
-		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO										{ instalar($2,"entero");    asignar_inicializado($2,$4);  imprime_indentacion(); printf("int %s = %d;",$2,$4);   }
-		|	ENTERO IDENTIFICADOR ',' declaracionMultiple									{ instalar($2,"entero");    asignar_inicializado($2,0);   printf("%s;",$2);   }
-		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO		  ',' declaracionMultiple		{ instalar($2,"entero");    asignar_inicializado($2,$4);  printf("%s = %d;",$2,$4);   }
 
-		|	CARACTER IDENTIFICADOR 															{ instalar($2,"caracter");  asignar_inicializadoCaracter($2," ");  imprime_indentacion(); printf("char %s ;",$2);      }
-		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE			{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,$5);    imprime_indentacion(); printf("char %s = %s;",$2,$5); }
-		|	CARACTER IDENTIFICADOR ',' declaracionMultipleCaracter							{ instalar($2,"caracter");  asignar_inicializadoCaracter($2," ");  printf("%s;",$2);   }
-		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,$5);   imprime_indentacion(); printf("char %s = ;",$2);   }
 
-		|	FLOTANTE IDENTIFICADOR 																	{ instalar($2,"flotante");    asignar_inicializadoFlotante($2,0.0); imprime_indentacion(); printf("float %s;",$2);   }
-		| 	FLOTANTE IDENTIFICADOR     ASIGNACION NUMFLOTANTE										{ instalar($2,"flotante");    asignar_inicializadoFlotante($2,$4);  imprime_indentacion(); printf("float %s = %f;",$2,$4);   }
-		|	FLOTANTE IDENTIFICADOR ',' declaracionMultipleFotante									{ instalar($2,"flotante");    asignar_inicializadoFlotante($2,0.0); 					   printf("%s;",$2);   }
-		| 	FLOTANTE IDENTIFICADOR     ASIGNACION NUMFLOTANTE  ',' declaracionMultipleFotante		{ instalar($2,"flotante");    asignar_inicializadoFlotante($2,$4);  					   printf("%s = %f;",$2,$4);   }								
+declaracion :  /*empty*/
+						|	ENTERO identificadores_entero
+						|	CARACTER identificadores_caracter
+						;
+
+identificadores_entero :  IDENTIFICADOR      					 	{instalar($1,"entero"); imprime_indentacion(); printf("int %s;\n",$1);  }
+		| IDENTIFICADOR ',' identificadores_entero				{instalar($1,"entero"); imprime_indentacion(); printf("int %s;\n",$1);  }
 		;
 
-declaracionMultiple : /*empty*/
-		|	IDENTIFICADOR 											{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION NUMERO							{ instalar($1,"entero");    asignar_inicializado($1,$3); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
-		|	IDENTIFICADOR ','	declaracionMultiple					{ instalar($1,"entero");    asignar_inicializado($1,0); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION NUMERO	','	declaracionMultiple	{ instalar($1,"entero");    asignar_inicializado($1,$3); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
-		;
-
-declaracionMultipleCaracter : /*empty*/
-		|	IDENTIFICADOR 																					{ instalar($1,"caracter");    asignar_inicializadoCaracter($1," "); imprime_indentacion(); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE									{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %s,",$1,$4);   }
-		|	IDENTIFICADOR ','	declaracionMultipleCaracter													{ instalar($1,"caracter");    asignar_inicializadoCaracter($1," "); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %s,",$1,$4);   }
-		;
-
-declaracionMultipleFotante : /*empty*/
-		|	IDENTIFICADOR 													{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 	imprime_indentacion(); printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE							{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3); 	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
-		|	IDENTIFICADOR ','	declaracionMultipleFotante					{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 						   printf("%s,",$1);   }
-		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE	','	declaracionMultipleFotante	{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3);	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
+identificadores_caracter : IDENTIFICADOR      					{ instalar($1,"caracter"); int i=0;  imprime_indentacion();  printf("int %s;\n",$1);  }
+		| IDENTIFICADOR ',' identificadores_caracter				{ instalar($1,"caracter"); int i=0;  imprime_indentacion();   printf("int %s;\n",$1);  }
 		;
 
 
@@ -197,39 +157,37 @@ instrucciones : /*empty*/
 		| instrucciones instruccion ';'
 		;
 
-instruccion : LEER '(' IDENTIFICADOR ')'    { verifica_contexto($3);  verifica_inicializacion($3); imprime_indentacion(); imprime_instruccion_leer($3);}
-		| IDENTIFICADOR ASIGNACION expresion_aritmetica    { asignar_inicializado($1,1); }
-		| IDENTIFICADOR ASIGNACION IDENTIFICADOR  { verifica_tipos($1,$3); asignar_inicializado($1,1); }
+instruccion : LEER '(' IDENTIFICADOR ')'    {  verifica_contexto($3);	imprime_indentacion();  	imprime_instruccion_leer($3);}
+		| IDENTIFICADOR ASIGNACION IDENTIFICADOR     { compara_variables($1,$3); }
+		| IDENTIFICADOR ASIGNACION NUMERO     { }
 		| IMPRIMIR '(' CADENA ')'
-		| MIENTRAS '(' expresion ')' ABRIR_BLOQUE   { imprime_indentacion(); printf("while(){"); num_espacios += 2;  }
+		| MIENTRAS '(' exp_arit ')' ABRIR_BLOQUE	 { imprime_indentacion(); printf("while(");   eval($3);   treefree($3);  printf("){\n");  num_espacios += 2; }
 			instrucciones
-		    CERRAR_BLOQUE  { num_espacios -= 2; imprime_indentacion(); printf("}");   }
-		| PARA '(' IDENTIFICADOR ASIGNACION NUMERO ';' expresion ';' expresion_incremento  ')' ABRIR_BLOQUE
-			instrucciones
-			CERRAR_BLOQUE
+		  CERRAR_BLOQUE																	{ num_espacios -= 2;  imprime_indentacion();  printf("}\n");			}
 		;
 
 
-expresion : expresion '<' expresion
-		| expresion '>' expresion
-		| expresion OR expresion
-		| NUMERO
-		| IDENTIFICADOR            { verifica_contexto($1);  }
-		| expresion_incremento
-		| expresion_aritmetica
-		;
 
 
-expresion_incremento : IDENTIFICADOR DOBLE_MAS
-										 | IDENTIFICADOR DOBLE_MENOS
-										 ;
 
-expresion_aritmetica : expresion_aritmetica MAS expresion_aritmetica
-										 | NUMERO
-										 | IDENTIFICADOR
-										 | NUMFLOTANTE
-										 | '(' expresion_aritmetica ')'
-										 ;
+
+
+exp_arit : factor
+			  | exp_arit MAS factor			{ $$ = newast('+', $1,$3);  		       }
+			  | exp_arit MENOS factor   { $$ = newast('-', $1,$3);  		       }
+			;
+
+
+factor	: termino
+			| factor POR termino         { $$ = newast('*', $1,$3);  		     }
+			| factor ENTRE termino			 { $$ = newast('/', $1,$3);   		     }
+			;
+
+
+termino : NUMERO					{ $$ = newnum($1);   }
+			 | IDENTIFICADOR	  { $$ = newID($1);  }
+		   | '(' exp_arit ')'	{ $$ = $2;  }
+		   ;
 
 %%
 

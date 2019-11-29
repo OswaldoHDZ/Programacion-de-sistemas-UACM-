@@ -46,30 +46,26 @@ extern int yydebug;
   enum yytokentype
   {
     ENTERO = 258,
-    FLOTANTE = 259,
-    NUMFLOTANTE = 260,
-    CADENA = 261,
-    CARACTER = 262,
-    IDENTIFICADOR = 263,
-    NUMERO = 264,
-    LETRA = 265,
-    ABRIR_BLOQUE = 266,
-    CERRAR_BLOQUE = 267,
-    COMILLA_SIMPLE = 268,
-    PRINCIPAL = 269,
-    LEER = 270,
-    IMPRIMIR = 271,
-    MIENTRAS = 272,
-    PARA = 273,
-    HAZ = 274,
-    SI = 275,
-    ENTONCES = 276,
-    OTRO = 277,
-    OR = 278,
-    ASIGNACION = 279,
-    DOBLE_MAS = 280,
-    DOBLE_MENOS = 281,
-    MAS = 282
+    CADENA = 259,
+    DATO_CARACTER = 260,
+    CARACTER = 261,
+    IDENTIFICADOR = 262,
+    NUMERO = 263,
+    ABRIR_BLOQUE = 264,
+    CERRAR_BLOQUE = 265,
+    PRINCIPAL = 266,
+    LEER = 267,
+    IMPRIMIR = 268,
+    MIENTRAS = 269,
+    PARA = 270,
+    OR = 271,
+    ASIGNACION = 272,
+    DOBLE_MAS = 273,
+    DOBLE_MENOS = 274,
+    MAS = 275,
+    MENOS = 276,
+    POR = 277,
+    ENTRE = 278
   };
 #endif
 
@@ -78,14 +74,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 118 "gramatica.y" /* yacc.c:1909  */
+#line 97 "gramatica.y" /* yacc.c:1909  */
 
-	char 	*cadena;
-	double 	flotante;
-	char 	*caracter;
-	int 	entero;
+	struct ast *arbol;
+	char *cadena;
+	char caracter;
+	int entero;
 
-#line 89 "gramatica.tab.h" /* yacc.c:1909  */
+#line 85 "gramatica.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
