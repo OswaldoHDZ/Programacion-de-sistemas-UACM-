@@ -161,7 +161,7 @@ declaracion : /*empty*/
 		| 	ENTERO IDENTIFICADOR     ASIGNACION NUMERO		  ',' declaracionMultiple		{ instalar($2,"entero");    asignar_inicializado($2,$4);  printf("%s = %d;",$2,$4);   }
 
 		|	CARACTER IDENTIFICADOR 															{ instalar($2,"caracter");  asignar_inicializadoCaracter($2," ");  imprime_indentacion(); printf("char %s ;",$2);      }
-		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE			{ instalar($2,"caracter");      }
+		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE			{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,$5);    imprime_indentacion(); printf("char %s = %s;",$2,$5); }
 		|	CARACTER IDENTIFICADOR ',' declaracionMultipleCaracter							{ instalar($2,"caracter");  asignar_inicializadoCaracter($2," ");  printf("%s;",$2);   }
 		| 	CARACTER IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($2,"caracter");  asignar_inicializadoCaracter($2,$5);   imprime_indentacion(); printf("char %s = ;",$2);   }
 

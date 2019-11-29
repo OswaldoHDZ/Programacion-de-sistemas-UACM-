@@ -1,5 +1,4 @@
 principal(){
 
-	caracter vv<-'dd';
-	
+	caracter v<-'W';
 }

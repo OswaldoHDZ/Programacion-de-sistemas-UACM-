@@ -1466,7 +1466,7 @@ yyreduce:
 
   case 12:
 #line 164 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[-4].cadena),"caracter");      }
+    { instalar((yyvsp[-4].cadena),"caracter");  asignar_inicializadoCaracter((yyvsp[-4].cadena),(yyvsp[-1].caracter));    imprime_indentacion(); printf("char %s = %s;",(yyvsp[-4].cadena),(yyvsp[-1].caracter)); }
 #line 1471 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
