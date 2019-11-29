@@ -6,7 +6,7 @@ struct simbolo{
 	char 			*nombre; 						// Nombre del identificador
 	char 			*tipo_dato;   					// tipo de dato: caracter flotante entero
 	int 			inicializado; 					// Solo datos enteros	   3	
-	char 			inicializadoValorCaracter; 		// Solo datos caracteres  's'
+	char 			*inicializadoValorCaracter; 		// Solo datos caracteres  's'
 	float			inicializadoValorFlotante; 		// Solo datos flotantes   4.5
 	struct simbolo *siguiente_nodo;
 };
@@ -51,7 +51,7 @@ void set_inicializado(char *nombre_simbolo, int valor){
 	s->inicializado = valor;
 }
 
-void set_inicializadoCaracter(char *nombre_simbolo, char valor){
+void set_inicializadoCaracter(char *nombre_simbolo, char *valor){
 	simbolo *s = tabla_simbolos;
 	while( strcmp(s->nombre, nombre_simbolo) != 0){  /*ptr != (simbolo *)0*/
 		s = s -> siguiente_nodo;
@@ -75,16 +75,6 @@ int get_inicializado(char *nombre_simbolo){
 	}
 	return s->inicializado;
 }
-
-
-
-
-
-
-
-
-
-
 
 void imprime_tabla(simbolo *primer_simbolo){
 	simbolo *simbolo_actual = primer_simbolo;

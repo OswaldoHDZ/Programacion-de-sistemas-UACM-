@@ -26,6 +26,7 @@ LETRA [a-zA-Z]
 "imprimir"                  { return IMPRIMIR; }
 "{"                         { return ABRIR_BLOQUE;            }
 "}"                         { return CERRAR_BLOQUE;         }
+"'"                         { return COMILLA_SIMPLE; }
 "entero"                    { return ENTERO; }
 "caracter"                  { return CARACTER; }
 "flotante"                  { return FLOTANTE; }
@@ -33,7 +34,7 @@ LETRA [a-zA-Z]
 "\""[a-zA-Z0-9_,\- ]*"\""   { return CADENA; }
 "0"|[1-9][0-9]*             { yylval.entero = atoi(yytext);   return NUMERO; }
 [a-z][a-zA-Z0-9_]*          { yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR; }
-[a-zA-Z]                    { yylval.caracter = yytext[0]; return LETRA; }
+[a-zA-Z]                    { yylval.caracter = (char*) strdup(yytext); return LETRA; }
 [0-9]+([.][0-9]+)           { yylval.flotante = strtod(yytext, NULL); return NUMFLOTANTE; }
 [ \t\r\n]+     		        { /* Ignora los espacios en blanco */ }
 . 					        {  return(yytext[0]);  }

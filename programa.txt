@@ -1,13 +1,5 @@
 principal(){
-	entero a;
-	caracter w;
-	entero uno;
-	flotante v;
-	entero dos <- 1;
-	entero tres,cuatro;
-	entero cinco,seis,siete;
-	entero ocho <-8, nueve;
-	entero dies ,once <-8;
-	entero dose ,catoce <-8,quince;
-	entero diesYseis <-8, diesYocho,diesYnueve;
+
+	caracter vv<-'dd';
+	
 }
