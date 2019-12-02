@@ -69,7 +69,6 @@
 		s2 = obtener_simbolo(nombre_simbolo2);
 		if(  strcmp(s1->tipo_dato,s2->tipo_dato) != 0 ){
 		printf("\nNo se puede asignar  %s a un %s\n",s2->tipo_dato,s1->tipo_dato);
-		return;
 		}
 	}
 
@@ -235,8 +234,9 @@ instrucciones : /*empty*/
 
 instruccion : LEER '(' IDENTIFICADOR ')'    				{  verifica_contexto($3);	verifica_inicializacion($3); imprime_indentacion();  	imprime_instruccion_leer($3);}
 		| IDENTIFICADOR ASIGNACION IDENTIFICADOR     		{ compara_variables($1,$3); }
-		| IDENTIFICADOR ASIGNACION NUMERO     				{ }
-		| IDENTIFICADOR ASIGNACION NUMFLOTANTE 				{ }
+		| IDENTIFICADOR ASIGNACION NUMERO     				{ asignar_inicializado($1,$3);}
+		| IDENTIFICADOR ASIGNACION NUMFLOTANTE 				{ asignar_inicializado($1,$3);}
+		| IDENTIFICADOR ASIGNACION CARACTER					{ asignar_inicializado($1,$3);} 
 		| IMPRIMIR '(' CADENA ')'
 		| MIENTRAS '(' exp_arit ')' ABRIR_BLOQUE	 		{ imprime_indentacion(); printf("while(");   eval($3);   treefree($3);  printf("){\n");  num_espacios += 2; }
 			instrucciones

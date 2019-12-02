@@ -2,10 +2,9 @@ principal(){
 	entero numero_dias, edad, aa;
 	entero b;
 	entero numero_dias2;
-	caracter hola;
+	caracter ah <- 'H';
 	caracter letra, letra2, letra3;
-	numero_dias <- 5;
-	numero_dias <- 7;
+	numero_dias <- 2;
 	mientras( (     (7*7)   *   (5+7   )      /3)   -   (32+76)  ){
 		leer(numero_dias);
 		mientras( 3/4  ){

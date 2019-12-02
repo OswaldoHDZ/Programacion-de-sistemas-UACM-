@@ -78,7 +78,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 132 "gramatica.y" /* yacc.c:1909  */
+#line 131 "gramatica.y" /* yacc.c:1909  */
 
 	struct ast *arbol;
 	char *cadena;
