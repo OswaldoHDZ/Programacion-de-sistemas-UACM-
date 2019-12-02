@@ -382,15 +382,15 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[94] =
     {   0,
         0,    0,   29,   27,   26,   26,   27,   17,    5,    3,
-        4,    6,   22,   22,   27,   22,   22,   22,   22,   22,
-       22,   22,   22,   22,   15,   27,   16,   26,    0,   21,
-        0,    8,    7,    0,    0,   24,   10,   25,   25,   25,
-       25,   25,   25,   25,   25,   25,   11,    0,   23,   25,
-       25,   25,   25,   25,   25,   25,   25,    0,   25,   25,
-       25,   25,   13,   25,    9,   25,    0,   25,   25,   25,
-       25,   25,   25,    0,   25,   18,   25,   25,   25,   25,
-        1,   25,   25,   25,   25,   25,    2,   19,   14,   12,
-       25,   20,    0
+        4,    6,   23,   23,   27,   25,   24,   24,   24,   24,
+       24,   24,   24,   24,   15,   27,   16,   26,    0,   21,
+        0,    8,    7,    0,    0,   23,   10,   24,   24,   24,
+       24,   24,   24,   24,   24,   24,   11,    0,   22,   24,
+       24,   24,   24,   24,   24,   24,   24,    0,   24,   24,
+       24,   24,   13,   24,    9,   24,    0,   24,   24,   24,
+       24,   24,   24,    0,   24,   18,   24,   24,   24,   24,
+        1,   24,   24,   24,   24,   24,    2,   19,   14,   12,
+       24,   20,    0
 
     } ;
 
@@ -930,22 +930,22 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 38 "gramatica.l"
-{ yylval.caracter = (char*) strdup(yytext); return LETRA; }
+{ yylval.flotante = strtod(yytext, NULL);   return NUMFLOTANTE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 39 "gramatica.l"
-{ yylval.flotante = strtod(yytext, NULL);   return NUMFLOTANTE; }
+{ yylval.entero = atoi(yytext);   return NUMERO; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 40 "gramatica.l"
-{ yylval.entero = atoi(yytext);   return NUMERO; }
+{ yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR;      }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 41 "gramatica.l"
-{ yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR;      }
+{ yylval.caracter = (char*) strdup(yytext); return LETRA; }
 	YY_BREAK
 case 26:
 /* rule 26 can match eol */

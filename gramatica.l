@@ -35,10 +35,10 @@ LETRA [a-zA-Z]
 "flotante"                  { return FLOTANTE; }
 "principal"                 { return PRINCIPAL;                     }
 "\""[a-zA-Z0-9_,\- ]*"\""   { return CADENA; }
-[a-zA-Z0-9]                 { yylval.caracter = (char*) strdup(yytext); return LETRA; }
 [0-9]+([.][0-9]+)           { yylval.flotante = strtod(yytext, NULL);   return NUMFLOTANTE; }
 "0"|[1-9][0-9]*             { yylval.entero = atoi(yytext);   return NUMERO; }
 [a-z][a-zA-Z0-9_]*          { yylval.cadena = (char*) strdup(yytext); return IDENTIFICADOR;      }
+[a-zA-Z0-9]                 { yylval.caracter = (char*) strdup(yytext); return LETRA; }
 [ \t\r\n]+     		        { /* Ignora los espacios en blanco */ }
 . 					        {  return(yytext[0]);  }
 

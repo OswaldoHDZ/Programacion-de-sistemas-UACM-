@@ -64,132 +64,132 @@
 /* Copy the first part of user declarations.  */
 #line 1 "gramatica.y" /* yacc.c:339  */
 
-#include <stdio.h>
-#include <ctype.h>
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
-#include "TS.h"
-#include "arbol.h"
+	#include <stdio.h>
+	#include <ctype.h>
+	#include <math.h>
+	#include <stdlib.h>
+	#include <string.h>
+	#include "TS.h"
+	#include "arbol.h"
 
-#define YYDEBUG 1
-
-
-int errores;
-int num_espacios;
-
-int yylex();
-int yyerror(const char *s);
+	#define YYDEBUG 1
 
 
-/*
-Verifica si el identificador que se pasa como
-parametro ya esta en la tabla de simbols.
-Si ya existe, manda error e incrementa el número de errores
-si no existe entonces lo inserta en la tabla de simbolos.
-Se usa en las reglas de declaraciones
-entero a; <-  tendría que insertarla en la tabla de simbolos
-entero a; <-- tendría que marcar que ya está
-*/
-void instalar(char *nombre_simbolo, char *tipo_dato){
-	simbolo *s;
-	s = obtener_simbolo(nombre_simbolo);
-	if( s == 0 )
-		s = inserta_simbolo(nombre_simbolo,tipo_dato);
-	else{
-		errores++;
-		printf("(Variable duplicada): %s ya está declarada \n",nombre_simbolo);
-	}
-}
+	int errores;
+	int num_espacios;
 
-/*
-Si la variable no está declarada anteriormente
-entonces no se puede usar y manda un mensaje
-Se utiliza en cualquier expresion o funcion
-que utilice una variable
-leer(edad); <- Si no existe en la tabla manda error
-								porque se debe declarar antes
-						<- Si ya existe no hace nada porque ya
-								está declarada
-*/
-void verifica_contexto(char *nombre_simbolo){
-	if(obtener_simbolo(nombre_simbolo) == 0){
-		printf("%s es un identificador no declarado \n",nombre_simbolo);
-		errores++;
-	}
-}
+	int yylex();
+	int yyerror(const char *s);
 
 
-
-
-/*
-Esta funcion recibe dos nombres de simbolos, los busca en la tabla
-de símbolos y luego compara sus tipos de datos. Si son diferentes
-marca error e incrementa el número de errores. Si son iguales
-no hace nada.
-*/
-void compara_variables(char *nombre_simbolo1, char *nombre_simbolo2){
-	simbolo *s1, *s2;
-	s1 = obtener_simbolo(nombre_simbolo1);
-	s2 = obtener_simbolo(nombre_simbolo2);
-	if(  strcmp(s1->tipo_dato,s2->tipo_dato) != 0 ){
-	   printf("\nNo se puede asignar  %s a un %s\n",s2->tipo_dato,s1->tipo_dato);
-	   return;
-	}
-}
-
-
-
-
-void imprime_instruccion_leer(char *nombre_simbolo){
+	/*
+	Verifica si el identificador que se pasa como
+	parametro ya esta en la tabla de simbols.
+	Si ya existe, manda error e incrementa el número de errores
+	si no existe entonces lo inserta en la tabla de simbolos.
+	Se usa en las reglas de declaraciones
+	entero a; <-  tendría que insertarla en la tabla de simbolos
+	entero a; <-- tendría que marcar que ya está
+	*/
+	void instalar(char *nombre_simbolo, char *tipo_dato){
 		simbolo *s;
 		s = obtener_simbolo(nombre_simbolo);
-		printf("scanf(\"%%d\",&%s);\n",s->nombre);
-}
-
-/*
-Verifica si dos simbolos tienen el mismo tipo
-*/
-void verifica_tipos(char *nombre_simbolo1, char *nombre_simbolo2){
-	simbolo *s1, *s2;
-	s1 = obtener_simbolo(nombre_simbolo1);
-	s2 = obtener_simbolo(nombre_simbolo2);
-	printf("\nComparando %s y %s \n",s1->tipo_dato,s2->tipo_dato);
-	if( strcmp(s1->tipo_dato,s2->tipo_dato) != 0){
-		printf("Las dos variables deben tener el mismo tipo de dato ");
-		errores++;
+		if( s == 0 )
+			s = inserta_simbolo(nombre_simbolo,tipo_dato);
+		else{
+			errores++;
+			printf("(Variable duplicada): %s ya está declarada \n",nombre_simbolo);
+		}
 	}
-}
 
-
-void asignar_inicializado(char *nombre_simbolo, int valor){
-		set_inicializado(nombre_simbolo, valor);
-}
-
-void asignar_inicializadoCaracter (char *nombre_simbolo, char *valor){
-	set_inicializadoCaracter(nombre_simbolo,valor);
-}
-
-void asignar_inicializadoFlotante (char *nombre_simbolo, float valor){
-	set_inicializadoFlotante(nombre_simbolo,valor);
-}
-
-void verifica_inicializacion(char *nombre_simbolo){
-	simbolo *s;
-	s = obtener_simbolo(nombre_simbolo);
-	if( s->inicializado == 0 || s->inicializadoValorCaracter == " " || s->inicializadoValorFlotante == 0.0){
-		printf("\nLa variable %s no esta inicializada\n",nombre_simbolo);
-		errores++;
+	/*
+	Si la variable no está declarada anteriormente
+	entonces no se puede usar y manda un mensaje
+	Se utiliza en cualquier expresion o funcion
+	que utilice una variable
+	leer(edad); <- Si no existe en la tabla manda error
+									porque se debe declarar antes
+							<- Si ya existe no hace nada porque ya
+									está declarada
+	*/
+	void verifica_contexto(char *nombre_simbolo){
+		if(obtener_simbolo(nombre_simbolo) == 0){
+			printf("%s es un identificador no declarado \n",nombre_simbolo);
+			errores++;
+		}
 	}
-}
 
-void imprime_indentacion(){
-	int i=0;
-	for(i=0; i<=num_espacios; i++)
-	{
-		printf(" ");
-	};
-}
+
+
+
+	/*
+	Esta funcion recibe dos nombres de simbolos, los busca en la tabla
+	de símbolos y luego compara sus tipos de datos. Si son diferentes
+	marca error e incrementa el número de errores. Si son iguales
+	no hace nada.
+	*/
+	void compara_variables(char *nombre_simbolo1, char *nombre_simbolo2){
+		simbolo *s1, *s2;
+		s1 = obtener_simbolo(nombre_simbolo1);
+		s2 = obtener_simbolo(nombre_simbolo2);
+		if(  strcmp(s1->tipo_dato,s2->tipo_dato) != 0 ){
+		printf("\nNo se puede asignar  %s a un %s\n",s2->tipo_dato,s1->tipo_dato);
+		return;
+		}
+	}
+
+
+
+
+	void imprime_instruccion_leer(char *nombre_simbolo){
+			simbolo *s;
+			s = obtener_simbolo(nombre_simbolo);
+			printf("scanf(\"%%d\",&%s);\n",s->nombre);
+	}
+
+	/*
+	Verifica si dos simbolos tienen el mismo tipo
+	*/
+	void verifica_tipos(char *nombre_simbolo1, char *nombre_simbolo2){
+		simbolo *s1, *s2;
+		s1 = obtener_simbolo(nombre_simbolo1);
+		s2 = obtener_simbolo(nombre_simbolo2);
+		printf("\nComparando %s y %s \n",s1->tipo_dato,s2->tipo_dato);
+		if( strcmp(s1->tipo_dato,s2->tipo_dato) != 0){
+			printf("Las dos variables deben tener el mismo tipo de dato ");
+			errores++;
+		}
+	}
+
+
+	void asignar_inicializado(char *nombre_simbolo, int valor){
+			set_inicializado(nombre_simbolo, valor);
+	}
+
+	void asignar_inicializadoCaracter (char *nombre_simbolo, char *valor){
+		set_inicializadoCaracter(nombre_simbolo,valor);
+	}
+
+	void asignar_inicializadoFlotante (char *nombre_simbolo, float valor){
+		set_inicializadoFlotante(nombre_simbolo,valor);
+	}
+
+	void verifica_inicializacion(char *nombre_simbolo){
+		simbolo *s;
+		s = obtener_simbolo(nombre_simbolo);
+		if( s->inicializado == 0 || s->inicializadoValorCaracter == " " || s->inicializadoValorFlotante == 0.0){
+			printf("\nLa variable %s no esta inicializada\n",nombre_simbolo);
+			errores++;
+		}
+	}
+
+	void imprime_indentacion(){
+		int i=0;
+		for(i=0; i<=num_espacios; i++)
+		{
+			printf(" ");
+		};
+	}
 
 
 
@@ -563,12 +563,12 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   167,   167,   167,   175,   176,   181,   182,   183,   184,
-     188,   189,   190,   191,   192,   196,   197,   198,   199,   200,
-     203,   204,   205,   206,   207,   210,   211,   212,   213,   214,
-     216,   217,   218,   219,   220,   223,   224,   225,   226,   227,
-     230,   231,   234,   235,   236,   237,   238,   239,   239,   251,
-     252,   253,   257,   258,   259,   262,   263,   264,   265
+       0,   167,   167,   167,   176,   177,   182,   183,   184,   185,
+     189,   190,   191,   192,   193,   197,   198,   199,   200,   201,
+     205,   206,   207,   208,   209,   212,   213,   214,   215,   216,
+     218,   219,   220,   221,   222,   225,   226,   227,   228,   229,
+     232,   233,   236,   237,   238,   239,   240,   241,   241,   250,
+     251,   252,   256,   257,   258,   261,   262,   263,   264
 };
 #endif
 
@@ -1680,252 +1680,252 @@ yyreduce:
 
   case 3:
 #line 170 "gramatica.y" /* yacc.c:1646  */
-    { printf("}\n\n");  num_espacios -= 2; }
+    { printf("}\n\n");  num_espacios -= 2;		}
 #line 1685 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 188 "gramatica.y" /* yacc.c:1646  */
+#line 189 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[0].cadena),"entero"); 	asignar_inicializado((yyvsp[0].cadena),0);		imprime_indentacion();	printf("int %s;\n",(yyvsp[0].cadena));  }
 #line 1691 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 189 "gramatica.y" /* yacc.c:1646  */
+#line 190 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"entero"); 	asignar_inicializado((yyvsp[-2].cadena),0);		imprime_indentacion(); 	printf("int %s;\n",(yyvsp[-2].cadena));  }
 #line 1697 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 190 "gramatica.y" /* yacc.c:1646  */
+#line 191 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"entero");   	asignar_inicializado((yyvsp[-2].cadena),(yyvsp[0].entero));	imprime_indentacion(); 	printf("int %s = %d;\n",(yyvsp[-2].cadena),(yyvsp[0].entero));   }
 #line 1703 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 191 "gramatica.y" /* yacc.c:1646  */
+#line 192 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"entero");    asignar_inicializado((yyvsp[-2].cadena),0);   							printf("%s;",(yyvsp[-2].cadena));   }
 #line 1709 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 192 "gramatica.y" /* yacc.c:1646  */
+#line 193 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-4].cadena),"entero");    asignar_inicializado((yyvsp[-4].cadena),(yyvsp[-2].entero));  							printf("%s = %d;",(yyvsp[-4].cadena),(yyvsp[-2].entero));   }
 #line 1715 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 196 "gramatica.y" /* yacc.c:1646  */
+#line 197 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[0].cadena),"caracter"); asignar_inicializadoCaracter((yyvsp[0].cadena)," ");	int i=0;  	imprime_indentacion();  printf("int %s;\n",(yyvsp[0].cadena));  }
 #line 1721 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 197 "gramatica.y" /* yacc.c:1646  */
+#line 198 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"caracter"); asignar_inicializadoCaracter((yyvsp[-2].cadena)," ");	int i=0;  	imprime_indentacion();  printf("int %s;\n",(yyvsp[-2].cadena));  }
 #line 1727 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 198 "gramatica.y" /* yacc.c:1646  */
+#line 199 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-4].cadena),"caracter"); asignar_inicializadoCaracter((yyvsp[-4].cadena),(yyvsp[-1].caracter));					imprime_indentacion(); 	printf("char %s = %s;",(yyvsp[-4].cadena),(yyvsp[-1].caracter)); }
 #line 1733 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 199 "gramatica.y" /* yacc.c:1646  */
+#line 200 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"caracter"); asignar_inicializadoCaracter((yyvsp[-2].cadena)," ");  										printf("%s;",(yyvsp[-2].cadena));   }
 #line 1739 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 200 "gramatica.y" /* yacc.c:1646  */
+#line 201 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-6].cadena),"caracter"); asignar_inicializadoCaracter((yyvsp[-6].cadena),(yyvsp[-3].caracter));   				imprime_indentacion();	printf("char %s = ;",(yyvsp[-6].cadena));   }
 #line 1745 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 203 "gramatica.y" /* yacc.c:1646  */
+#line 205 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[0].cadena),"flotante"); int i=0; asignar_inicializadoFlotante((yyvsp[0].cadena),0.0); imprime_indentacion();  	printf("float %s;\n",(yyvsp[0].cadena));  }
 #line 1751 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 204 "gramatica.y" /* yacc.c:1646  */
+#line 206 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"flotante"); int i=0; asignar_inicializadoFlotante((yyvsp[-2].cadena),0.0); imprime_indentacion();  	printf("float %s;\n",(yyvsp[-2].cadena));  }
 #line 1757 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 205 "gramatica.y" /* yacc.c:1646  */
+#line 207 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"flotante");			asignar_inicializadoFlotante((yyvsp[-2].cadena),(yyvsp[0].flotante));  imprime_indentacion(); 	printf("float %s = %f;",(yyvsp[-2].cadena),(yyvsp[0].flotante));   }
 #line 1763 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 206 "gramatica.y" /* yacc.c:1646  */
+#line 208 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"flotante");    		asignar_inicializadoFlotante((yyvsp[-2].cadena),0.0); 					   		printf("%s;",(yyvsp[-2].cadena));   }
 #line 1769 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 207 "gramatica.y" /* yacc.c:1646  */
+#line 209 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-4].cadena),"flotante");    		asignar_inicializadoFlotante((yyvsp[-4].cadena),(yyvsp[-2].flotante));  					   		printf("%s = %f;",(yyvsp[-4].cadena),(yyvsp[-2].flotante));   }
 #line 1775 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 211 "gramatica.y" /* yacc.c:1646  */
+#line 213 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[0].cadena),"entero");    asignar_inicializado((yyvsp[0].cadena),0); imprime_indentacion(); printf("%s,",(yyvsp[0].cadena));   }
 #line 1781 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 212 "gramatica.y" /* yacc.c:1646  */
+#line 214 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"entero");    asignar_inicializado((yyvsp[-2].cadena),(yyvsp[0].entero)); imprime_indentacion(); printf("int %s = %d,",(yyvsp[-2].cadena),(yyvsp[0].entero));   }
 #line 1787 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 213 "gramatica.y" /* yacc.c:1646  */
+#line 215 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"entero");    asignar_inicializado((yyvsp[-2].cadena),0); printf("%s,",(yyvsp[-2].cadena));   }
 #line 1793 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 214 "gramatica.y" /* yacc.c:1646  */
+#line 216 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-4].cadena),"entero");    asignar_inicializado((yyvsp[-4].cadena),(yyvsp[-2].entero)); imprime_indentacion(); printf("int %s = %d,",(yyvsp[-4].cadena),(yyvsp[-2].entero));   }
 #line 1799 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 217 "gramatica.y" /* yacc.c:1646  */
+#line 219 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[0].cadena),"caracter");    asignar_inicializadoCaracter((yyvsp[0].cadena)," "); imprime_indentacion(); printf("%s,",(yyvsp[0].cadena));   }
 #line 1805 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 218 "gramatica.y" /* yacc.c:1646  */
+#line 220 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-4].cadena),"caracter");    asignar_inicializadoCaracter((yyvsp[-4].cadena),(yyvsp[-1].caracter)); imprime_indentacion(); printf("char %s = %s,",(yyvsp[-4].cadena),(yyvsp[-1].caracter));   }
 #line 1811 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 219 "gramatica.y" /* yacc.c:1646  */
+#line 221 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-2].cadena),"caracter");    asignar_inicializadoCaracter((yyvsp[-2].cadena)," "); printf("%s,",(yyvsp[-2].cadena));   }
 #line 1817 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 220 "gramatica.y" /* yacc.c:1646  */
+#line 222 "gramatica.y" /* yacc.c:1646  */
     { instalar((yyvsp[-6].cadena),"caracter");    asignar_inicializadoCaracter((yyvsp[-6].cadena),(yyvsp[-3].caracter)); imprime_indentacion(); printf("char %s = %s,",(yyvsp[-6].cadena),(yyvsp[-3].caracter));   }
 #line 1823 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 224 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[0].cadena),"entero");    asignar_inicializadoFlotante((yyvsp[0].cadena),0.0); 	imprime_indentacion(); printf("%s,",(yyvsp[0].cadena));   }
+#line 226 "gramatica.y" /* yacc.c:1646  */
+    { instalar((yyvsp[0].cadena),"flotante");    asignar_inicializadoFlotante((yyvsp[0].cadena),0.0); 	imprime_indentacion(); printf("%s,",(yyvsp[0].cadena));   }
 #line 1829 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 225 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[-2].cadena),"entero");    asignar_inicializadoFlotante((yyvsp[-2].cadena),(yyvsp[0].flotante)); 	imprime_indentacion(); printf("int %s = %f,",(yyvsp[-2].cadena),(yyvsp[0].flotante));   }
+#line 227 "gramatica.y" /* yacc.c:1646  */
+    { instalar((yyvsp[-2].cadena),"flotante");    asignar_inicializadoFlotante((yyvsp[-2].cadena),(yyvsp[0].flotante)); 		imprime_indentacion(); printf("int %s = %f,",(yyvsp[-2].cadena),(yyvsp[0].flotante));   }
 #line 1835 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 226 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[-2].cadena),"entero");    asignar_inicializadoFlotante((yyvsp[-2].cadena),0.0); 						   printf("%s,",(yyvsp[-2].cadena));   }
+#line 228 "gramatica.y" /* yacc.c:1646  */
+    { instalar((yyvsp[-2].cadena),"flotante");    asignar_inicializadoFlotante((yyvsp[-2].cadena),0.0); 						   printf("%s,",(yyvsp[-2].cadena));   }
 #line 1841 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 227 "gramatica.y" /* yacc.c:1646  */
-    { instalar((yyvsp[-4].cadena),"entero");    asignar_inicializadoFlotante((yyvsp[-4].cadena),(yyvsp[-2].flotante));	imprime_indentacion(); printf("int %s = %f,",(yyvsp[-4].cadena),(yyvsp[-2].flotante));   }
+#line 229 "gramatica.y" /* yacc.c:1646  */
+    { instalar((yyvsp[-4].cadena),"flotante");    asignar_inicializadoFlotante((yyvsp[-4].cadena),(yyvsp[-2].flotante));		imprime_indentacion(); printf("int %s = %f,",(yyvsp[-4].cadena),(yyvsp[-2].flotante));   }
 #line 1847 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 234 "gramatica.y" /* yacc.c:1646  */
+#line 236 "gramatica.y" /* yacc.c:1646  */
     {  verifica_contexto((yyvsp[-1].cadena));	imprime_indentacion();  	imprime_instruccion_leer((yyvsp[-1].cadena));}
 #line 1853 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 235 "gramatica.y" /* yacc.c:1646  */
+#line 237 "gramatica.y" /* yacc.c:1646  */
     { compara_variables((yyvsp[-2].cadena),(yyvsp[0].cadena)); }
 #line 1859 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 236 "gramatica.y" /* yacc.c:1646  */
+#line 238 "gramatica.y" /* yacc.c:1646  */
     { }
 #line 1865 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 237 "gramatica.y" /* yacc.c:1646  */
+#line 239 "gramatica.y" /* yacc.c:1646  */
     { }
 #line 1871 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 239 "gramatica.y" /* yacc.c:1646  */
+#line 241 "gramatica.y" /* yacc.c:1646  */
     { imprime_indentacion(); printf("while(");   eval((yyvsp[-2].arbol));   treefree((yyvsp[-2].arbol));  printf("){\n");  num_espacios += 2; }
 #line 1877 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 241 "gramatica.y" /* yacc.c:1646  */
+#line 243 "gramatica.y" /* yacc.c:1646  */
     { num_espacios -= 2;  imprime_indentacion();  printf("}\n");			}
 #line 1883 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 252 "gramatica.y" /* yacc.c:1646  */
+#line 251 "gramatica.y" /* yacc.c:1646  */
     { (yyval.arbol) = newast('+', (yyvsp[-2].arbol),(yyvsp[0].arbol));  }
 #line 1889 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 253 "gramatica.y" /* yacc.c:1646  */
+#line 252 "gramatica.y" /* yacc.c:1646  */
     { (yyval.arbol) = newast('-', (yyvsp[-2].arbol),(yyvsp[0].arbol));  }
 #line 1895 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 258 "gramatica.y" /* yacc.c:1646  */
+#line 257 "gramatica.y" /* yacc.c:1646  */
     { (yyval.arbol) = newast('*', (yyvsp[-2].arbol),(yyvsp[0].arbol)); }
 #line 1901 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 259 "gramatica.y" /* yacc.c:1646  */
+#line 258 "gramatica.y" /* yacc.c:1646  */
     { (yyval.arbol) = newast('/', (yyvsp[-2].arbol),(yyvsp[0].arbol)); }
 #line 1907 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 262 "gramatica.y" /* yacc.c:1646  */
+#line 261 "gramatica.y" /* yacc.c:1646  */
     { (yyval.arbol) = newnum((yyvsp[0].entero));   }
 #line 1913 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 263 "gramatica.y" /* yacc.c:1646  */
+#line 262 "gramatica.y" /* yacc.c:1646  */
     { (yyval.arbol) = newnum((yyvsp[0].flotante));   }
 #line 1919 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 264 "gramatica.y" /* yacc.c:1646  */
+#line 263 "gramatica.y" /* yacc.c:1646  */
     { (yyval.arbol) = newID((yyvsp[0].cadena));    }
 #line 1925 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 265 "gramatica.y" /* yacc.c:1646  */
+#line 264 "gramatica.y" /* yacc.c:1646  */
     { (yyval.arbol) = (yyvsp[-1].arbol);  }
 #line 1931 "gramatica.tab.c" /* yacc.c:1646  */
     break;
@@ -2171,7 +2171,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 268 "gramatica.y" /* yacc.c:1906  */
+#line 267 "gramatica.y" /* yacc.c:1906  */
 
 
 #include "lex.yy.c"

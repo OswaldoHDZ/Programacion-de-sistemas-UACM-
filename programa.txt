@@ -1,14 +1,8 @@
 principal(){
 	entero numero_dias, edad, aa;
-	entero a;
 	entero b;
 	entero numero_dias2;
-
-	entero como <- 2;
-
-
-	flotante hola;
-
+	caracter hola;
 	caracter letra, letra2, letra3;
 	numero_dias <- 5;
 	numero_dias <- 7;
