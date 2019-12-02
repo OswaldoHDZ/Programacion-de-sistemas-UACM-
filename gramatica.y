@@ -82,6 +82,41 @@ void imprime_instruccion_leer(char *nombre_simbolo){
 		printf("scanf(\"%%d\",&%s);\n",s->nombre);
 }
 
+/*
+Verifica si dos simbolos tienen el mismo tipo
+*/
+void verifica_tipos(char *nombre_simbolo1, char *nombre_simbolo2){
+	simbolo *s1, *s2;
+	s1 = obtener_simbolo(nombre_simbolo1);
+	s2 = obtener_simbolo(nombre_simbolo2);
+	printf("\nComparando %s y %s \n",s1->tipo_dato,s2->tipo_dato);
+	if( strcmp(s1->tipo_dato,s2->tipo_dato) != 0){
+		printf("Las dos variables deben tener el mismo tipo de dato ");
+		errores++;
+	}
+}
+
+
+void asignar_inicializado(char *nombre_simbolo, int valor){
+		set_inicializado(nombre_simbolo, valor);
+}
+
+void asignar_inicializadoCaracter (char *nombre_simbolo, char *valor){
+	set_inicializadoCaracter(nombre_simbolo,valor);
+}
+
+void asignar_inicializadoFlotante (char *nombre_simbolo, float valor){
+	set_inicializadoFlotante(nombre_simbolo,valor);
+}
+
+void verifica_inicializacion(char *nombre_simbolo){
+	simbolo *s;
+	s = obtener_simbolo(nombre_simbolo);
+	if( s->inicializado == 0 || s->inicializadoValorCaracter == " " || s->inicializadoValorFlotante == 0.0){
+		printf("\nLa variable %s no esta inicializada\n",nombre_simbolo);
+		errores++;
+	}
+}
 
 void imprime_indentacion(){
 	int i=0;
@@ -97,7 +132,8 @@ void imprime_indentacion(){
 %union{
 	struct ast *arbol;
 	char *cadena;
-	char caracter;
+	char *caracter;
+	double 	flotante;
 	int entero;
 }
 
@@ -107,12 +143,15 @@ void imprime_indentacion(){
 
 %start programa
 %token ENTERO
+%token FLOTANTE
 %token CADENA
 %token <caracter> DATO_CARACTER
 %token CARACTER
 %token <cadena> IDENTIFICADOR
 %token <entero> NUMERO
-%token ABRIR_BLOQUE CERRAR_BLOQUE
+%token <flotante> NUMFLOTANTE
+%token <caracter> LETRA
+%token ABRIR_BLOQUE CERRAR_BLOQUE COMILLA_SIMPLE
 %token PRINCIPAL
 %token LEER IMPRIMIR MIENTRAS PARA
 %token OR ASIGNACION DOBLE_MAS DOBLE_MENOS MAS MENOS POR ENTRE
@@ -128,7 +167,7 @@ void imprime_indentacion(){
 programa : PRINCIPAL '(' ')' ABRIR_BLOQUE							{ num_espacios = 0; printf("int main(){\n");  num_espacios += 2;	  }
 		  declaraciones
 		  instrucciones
-		  CERRAR_BLOQUE																{ printf("}\n\n");  num_espacios -= 2;		}
+		  CERRAR_BLOQUE												{ printf("}\n\n");  num_espacios -= 2; }
           ;
 
 
@@ -140,31 +179,68 @@ declaraciones : /*declaraciones*/
 
 
 declaracion :  /*empty*/
-						|	ENTERO identificadores_entero
+						|	ENTERO   identificadores_entero
 						|	CARACTER identificadores_caracter
+						|	FLOTANTE identificadores_flotante
 						;
 
-identificadores_entero :  IDENTIFICADOR      					 	{instalar($1,"entero"); imprime_indentacion(); printf("int %s;\n",$1);  }
-		| IDENTIFICADOR ',' identificadores_entero				{instalar($1,"entero"); imprime_indentacion(); printf("int %s;\n",$1);  }
+identificadores_entero :  
+		  IDENTIFICADOR      														{ instalar($1,"entero"); 	asignar_inicializado($1,0);		imprime_indentacion();	printf("int %s;\n",$1);  }
+		| IDENTIFICADOR ',' identificadores_entero			    					{ instalar($1,"entero"); 	asignar_inicializado($1,0);		imprime_indentacion(); 	printf("int %s;\n",$1);  }
+		| IDENTIFICADOR     ASIGNACION NUMERO										{ instalar($1,"entero");   	asignar_inicializado($1,$3);	imprime_indentacion(); 	printf("int %s = %d;\n",$1,$3);   }
+		| IDENTIFICADOR ',' declaracionMultiple									    { instalar($1,"entero");    asignar_inicializado($1,0);   							printf("%s;",$1);   }
+		| IDENTIFICADOR     ASIGNACION NUMERO		  ',' declaracionMultiple		{ instalar($1,"entero");    asignar_inicializado($1,$3);  							printf("%s = %d;",$1,$3);   }
 		;
 
-identificadores_caracter : IDENTIFICADOR      					{ instalar($1,"caracter"); int i=0;  imprime_indentacion();  printf("int %s;\n",$1);  }
-		| IDENTIFICADOR ',' identificadores_caracter				{ instalar($1,"caracter"); int i=0;  imprime_indentacion();   printf("int %s;\n",$1);  }
+
+identificadores_caracter : IDENTIFICADOR      																{ instalar($1,"caracter"); asignar_inicializadoCaracter($1," ");	int i=0;  	imprime_indentacion();  printf("int %s;\n",$1);  }
+		| IDENTIFICADOR ',' identificadores_caracter														{ instalar($1,"caracter"); asignar_inicializadoCaracter($1," ");	int i=0;  	imprime_indentacion();  printf("int %s;\n",$1);  }
+		| IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE									{ instalar($1,"caracter"); asignar_inicializadoCaracter($1,$4);					imprime_indentacion(); 	printf("char %s = %s;",$1,$4); }
+		| IDENTIFICADOR ',' declaracionMultipleCaracter														{ instalar($1,"caracter"); asignar_inicializadoCaracter($1," ");  										printf("%s;",$1);   }
+		| IDENTIFICADOR   ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($1,"caracter"); asignar_inicializadoCaracter($1,$4);   				imprime_indentacion();	printf("char %s = ;",$1);   }
 		;
 
+identificadores_flotante : IDENTIFICADOR      											{ instalar($1,"flotante"); int i=0; asignar_inicializadoFlotante($1,0.0); imprime_indentacion();  	printf("float %s;\n",$1);  }
+		| IDENTIFICADOR ',' identificadores_flotante									{ instalar($1,"flotante"); int i=0; asignar_inicializadoFlotante($1,0.0); imprime_indentacion();  	printf("float %s;\n",$1);  }
+		| IDENTIFICADOR     ASIGNACION NUMFLOTANTE										{ instalar($1,"flotante");			asignar_inicializadoFlotante($1,$3);  imprime_indentacion(); 	printf("float %s = %f;",$1,$3);   }
+		| IDENTIFICADOR ',' declaracionMultipleFotante									{ instalar($1,"flotante");    		asignar_inicializadoFlotante($1,0.0); 					   		printf("%s;",$1);   }
+		| IDENTIFICADOR     ASIGNACION NUMFLOTANTE  ',' declaracionMultipleFotante		{ instalar($1,"flotante");    		asignar_inicializadoFlotante($1,$3);  					   		printf("%s = %f;",$1,$3);   }								
+		;
 
+declaracionMultiple : /*empty*/
+		|	IDENTIFICADOR 											{ instalar($1,"entero");    asignar_inicializado($1,0); imprime_indentacion(); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMERO							{ instalar($1,"entero");    asignar_inicializado($1,$3); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
+		|	IDENTIFICADOR ','	declaracionMultiple					{ instalar($1,"entero");    asignar_inicializado($1,0); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMERO	','	declaracionMultiple	{ instalar($1,"entero");    asignar_inicializado($1,$3); imprime_indentacion(); printf("int %s = %d,",$1,$3);   }
+		;
+declaracionMultipleCaracter : /*empty*/
+		|	IDENTIFICADOR 																					{ instalar($1,"caracter");    asignar_inicializadoCaracter($1," "); imprime_indentacion(); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE									{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %s,",$1,$4);   }
+		|	IDENTIFICADOR ','	declaracionMultipleCaracter													{ instalar($1,"caracter");    asignar_inicializadoCaracter($1," "); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION COMILLA_SIMPLE LETRA COMILLA_SIMPLE	','	declaracionMultipleCaracter	{ instalar($1,"caracter");    asignar_inicializadoCaracter($1,$4); imprime_indentacion(); printf("char %s = %s,",$1,$4);   }
+		;
+
+declaracionMultipleFotante : /*empty*/
+		|	IDENTIFICADOR 													{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 	imprime_indentacion(); printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE							{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3); 	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
+		|	IDENTIFICADOR ','	declaracionMultipleFotante					{ instalar($1,"entero");    asignar_inicializadoFlotante($1,0.0); 						   printf("%s,",$1);   }
+		|	IDENTIFICADOR ASIGNACION NUMFLOTANTE	','	declaracionMultipleFotante	{ instalar($1,"entero");    asignar_inicializadoFlotante($1,$3);	imprime_indentacion(); printf("int %s = %f,",$1,$3);   }
+		;
+	
 instrucciones : /*empty*/
 		| instrucciones instruccion ';'
 		;
 
-instruccion : LEER '(' IDENTIFICADOR ')'    {  verifica_contexto($3);	imprime_indentacion();  	imprime_instruccion_leer($3);}
-		| IDENTIFICADOR ASIGNACION IDENTIFICADOR     { compara_variables($1,$3); }
-		| IDENTIFICADOR ASIGNACION NUMERO     { }
+instruccion : LEER '(' IDENTIFICADOR ')'    			{  verifica_contexto($3);	imprime_indentacion();  	imprime_instruccion_leer($3);}
+		| IDENTIFICADOR ASIGNACION IDENTIFICADOR     	{ compara_variables($1,$3); }
+		| IDENTIFICADOR ASIGNACION NUMERO     			{ }
+		| IDENTIFICADOR ASIGNACION NUMFLOTANTE     		{ }
 		| IMPRIMIR '(' CADENA ')'
-		| MIENTRAS '(' exp_arit ')' ABRIR_BLOQUE	 { imprime_indentacion(); printf("while(");   eval($3);   treefree($3);  printf("){\n");  num_espacios += 2; }
+		| MIENTRAS '(' exp_arit ')' ABRIR_BLOQUE	 	{ imprime_indentacion(); printf("while(");   eval($3);   treefree($3);  printf("){\n");  num_espacios += 2; }
 			instrucciones
-		  CERRAR_BLOQUE																	{ num_espacios -= 2;  imprime_indentacion();  printf("}\n");			}
+		  CERRAR_BLOQUE									{ num_espacios -= 2;  imprime_indentacion();  printf("}\n");			}
 		;
+
 
 
 
@@ -173,21 +249,21 @@ instruccion : LEER '(' IDENTIFICADOR ')'    {  verifica_contexto($3);	imprime_in
 
 
 exp_arit : factor
-			  | exp_arit MAS factor			{ $$ = newast('+', $1,$3);  		       }
-			  | exp_arit MENOS factor   { $$ = newast('-', $1,$3);  		       }
-			;
+				| exp_arit MAS factor			{ $$ = newast('+', $1,$3);  }
+				| exp_arit MENOS factor   	    { $$ = newast('-', $1,$3);  }
+				;
 
 
 factor	: termino
-			| factor POR termino         { $$ = newast('*', $1,$3);  		     }
-			| factor ENTRE termino			 { $$ = newast('/', $1,$3);   		     }
-			;
+				| factor POR termino         	{ $$ = newast('*', $1,$3); }
+				| factor ENTRE termino			{ $$ = newast('/', $1,$3); }
+				;
 
-
-termino : NUMERO					{ $$ = newnum($1);   }
-			 | IDENTIFICADOR	  { $$ = newID($1);  }
-		   | '(' exp_arit ')'	{ $$ = $2;  }
-		   ;
+termino :  NUMERO			 { $$ = newnum($1);   }
+		 | NUMFLOTANTE		 { $$ = newnum($1);   }
+		 | IDENTIFICADOR	 { $$ = newID($1);    }
+		 | '(' exp_arit ')'	 { $$ = $2;  }
+		 ;
 
 %%
 
