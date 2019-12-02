@@ -112,7 +112,7 @@
 	void verifica_inicializacion(char *nombre_simbolo){
 		simbolo *s;
 		s = obtener_simbolo(nombre_simbolo);
-		if( s->inicializado == 0 || s->inicializadoValorCaracter == " " || s->inicializadoValorFlotante == 0.0){
+		if( get_inicializado(nombre_simbolo)){
 			printf("\nLa variable %s no esta inicializada\n",nombre_simbolo);
 			errores++;
 		}
@@ -233,7 +233,7 @@ instrucciones : /*empty*/
 		| instrucciones instruccion ';'
 		;
 
-instruccion : LEER '(' IDENTIFICADOR ')'    				{  verifica_contexto($3);	imprime_indentacion();  	imprime_instruccion_leer($3);}
+instruccion : LEER '(' IDENTIFICADOR ')'    				{  verifica_contexto($3);	verifica_inicializacion($3); imprime_indentacion();  	imprime_instruccion_leer($3);}
 		| IDENTIFICADOR ASIGNACION IDENTIFICADOR     		{ compara_variables($1,$3); }
 		| IDENTIFICADOR ASIGNACION NUMERO     				{ }
 		| IDENTIFICADOR ASIGNACION NUMFLOTANTE 				{ }
@@ -260,7 +260,7 @@ factor	: termino
 
 termino :  NUMERO			 { $$ = newnum($1);   }
 		 | NUMFLOTANTE		 { $$ = newnum($1);   }
-		 | IDENTIFICADOR	 { $$ = newID($1);    }
+		 | IDENTIFICADOR	 { $$ = newID($1);   verifica_inicializacion($1);  }
 		 | '(' exp_arit ')'	 { $$ = $2;  }
 		 ;
 

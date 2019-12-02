@@ -71,9 +71,13 @@ void set_inicializadoFlotante(char *nombre_simbolo, float valor){
 int get_inicializado(char *nombre_simbolo){
 	simbolo *s = tabla_simbolos;
 	while( strcmp(s->nombre, nombre_simbolo) != 0){  /*ptr != (simbolo *)0*/
+		if(s->inicializado == 0 || s->inicializadoValorCaracter == " " || s->inicializadoValorFlotante == 0.0){
+			return 0;
+		}
 		s = s -> siguiente_nodo;
 	}
-	return s->inicializado;
+	
+	return 0;
 }
 
 void imprime_tabla(simbolo *primer_simbolo){

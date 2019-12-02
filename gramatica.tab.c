@@ -177,7 +177,7 @@
 	void verifica_inicializacion(char *nombre_simbolo){
 		simbolo *s;
 		s = obtener_simbolo(nombre_simbolo);
-		if( s->inicializado == 0 || s->inicializadoValorCaracter == " " || s->inicializadoValorFlotante == 0.0){
+		if( get_inicializado(nombre_simbolo)){
 			printf("\nLa variable %s no esta inicializada\n",nombre_simbolo);
 			errores++;
 		}
@@ -1848,7 +1848,7 @@ yyreduce:
 
   case 42:
 #line 236 "gramatica.y" /* yacc.c:1646  */
-    {  verifica_contexto((yyvsp[-1].cadena));	imprime_indentacion();  	imprime_instruccion_leer((yyvsp[-1].cadena));}
+    {  verifica_contexto((yyvsp[-1].cadena));	verifica_inicializacion((yyvsp[-1].cadena)); imprime_indentacion();  	imprime_instruccion_leer((yyvsp[-1].cadena));}
 #line 1853 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1920,7 +1920,7 @@ yyreduce:
 
   case 57:
 #line 263 "gramatica.y" /* yacc.c:1646  */
-    { (yyval.arbol) = newID((yyvsp[0].cadena));    }
+    { (yyval.arbol) = newID((yyvsp[0].cadena));   verifica_inicializacion((yyvsp[0].cadena));  }
 #line 1925 "gramatica.tab.c" /* yacc.c:1646  */
     break;
 
